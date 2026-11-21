@@ -1,0 +1,69 @@
+[gd_scene load_steps=9 format=3 uid="uid://region05cox001"]
+
+[ext_resource type="Script" path="res://world/world_tile.gd" id="1_tile"]
+[ext_resource type="PackedScene" path="res://environment/architecture/resort_hotel.tscn" id="2_hotel"]
+[ext_resource type="PackedScene" path="res://environment/foliage/coconut_palm.tscn" id="3_palm"]
+[ext_resource type="PackedScene" path="res://environment/infrastructure/water_surface.tscn" id="4_water"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_GoldenSand"]
+albedo_color = Color(0.88, 0.82, 0.62, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Mat_MarineDrive"]
+albedo_color = Color(0.15, 0.16, 0.18, 1)
+
+[sub_resource type="BoxShape3D" id="Box_Ground"]
+size = Vector3(512, 1, 512)
+
+[node name="Region05CoxBazar" type="Node3D"]
+script = ExtResource("1_tile")
+chunk_coord = Vector2i(1, -2)
+chunk_size_meters = 512.0
+region_id = "cox_bazar"
+region_name = "Cox's Bazar Coastal Marine Strip"
+region_bangla = "কক্সবাজার মেরিন ড্রাইভ"
+has_north_road = true
+has_south_road = false
+has_east_road = false
+has_west_road = false
+has_river_channel = true
+
+[node name="Terrain" type="Node3D" parent="."]
+
+[node name="SandyBeachGround" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(512, 1, 512)
+material = SubResource("Mat_GoldenSand")
+
+[node name="MarineDriveHighway" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0.05, 0)
+size = Vector3(14, 0.1, 512)
+material = SubResource("Mat_MarineDrive")
+
+[node name="BayOfBengalOcean" parent="Terrain" instance=ExtResource("4_water")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 140, -0.2, 0)
+
+[node name="LOD0_Detailed" type="Node3D" parent="."]
+
+[node name="ResortHotel1" parent="LOD0_Detailed" instance=ExtResource("2_hotel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -120, 0, -60)
+
+[node name="ResortHotel2" parent="LOD0_Detailed" instance=ExtResource("2_hotel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -120, 0, 100)
+
+[node name="Palm1" parent="LOD0_Detailed" instance=ExtResource("3_palm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, -40)
+
+[node name="Palm2" parent="LOD0_Detailed" instance=ExtResource("3_palm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 60)
+
+[node name="LOD1_Medium" type="Node3D" parent="."]
+
+[node name="Collisions" type="Node3D" parent="."]
+
+[node name="StaticGround" type="StaticBody3D" parent="Collisions"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Collisions/StaticGround"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("Box_Ground")

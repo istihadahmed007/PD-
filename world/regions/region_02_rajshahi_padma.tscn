@@ -1,0 +1,76 @@
+[gd_scene load_steps=10 format=3 uid="uid://region02rajshahi001"]
+
+[ext_resource type="Script" path="res://world/world_tile.gd" id="1_tile"]
+[ext_resource type="PackedScene" path="res://environment/architecture/brick_kiln.tscn" id="2_kiln"]
+[ext_resource type="PackedScene" path="res://environment/infrastructure/padma_truss_bridge.tscn" id="3_truss"]
+[ext_resource type="PackedScene" path="res://environment/foliage/mango_tree.tscn" id="4_mango"]
+[ext_resource type="PackedScene" path="res://environment/infrastructure/water_surface.tscn" id="5_water"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_PadmaSand"]
+albedo_color = Color(0.82, 0.78, 0.65, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Mat_HighwayNH1"]
+albedo_color = Color(0.14, 0.15, 0.18, 1)
+
+[sub_resource type="BoxShape3D" id="Box_Ground"]
+size = Vector3(512, 1, 512)
+
+[node name="Region02Rajshahi" type="Node3D"]
+script = ExtResource("1_tile")
+chunk_coord = Vector2i(-2, 0)
+chunk_size_meters = 512.0
+region_id = "rajshahi"
+region_name = "Rajshahi & Padma Delta"
+region_bangla = "রাজশাহী ও পদ্মা অববাহিকা"
+has_north_road = false
+has_south_road = false
+has_east_road = true
+has_west_road = false
+has_river_channel = true
+
+[node name="Terrain" type="Node3D" parent="."]
+
+[node name="PadmaSiltTerrain" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(512, 1, 512)
+material = SubResource("Mat_PadmaSand")
+
+[node name="PadmaExpresswayNH1" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+size = Vector3(512, 0.1, 16)
+material = SubResource("Mat_HighwayNH1")
+
+[node name="PadmaRiver" parent="Terrain" instance=ExtResource("5_water")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, -60)
+
+[node name="LOD0_Detailed" type="Node3D" parent="."]
+
+[node name="PadmaBridgeSpan" parent="LOD0_Detailed" instance=ExtResource("3_truss")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60, 0, 0)
+
+[node name="BrickKiln1" parent="LOD0_Detailed" instance=ExtResource("2_kiln")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -120, 0, 80)
+
+[node name="BrickKiln2" parent="LOD0_Detailed" instance=ExtResource("2_kiln")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -160, 0, 140)
+
+[node name="MangoOrchard1" parent="LOD0_Detailed" instance=ExtResource("4_mango")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -80, 0, -120)
+
+[node name="MangoOrchard2" parent="LOD0_Detailed" instance=ExtResource("4_mango")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -120, 0, -120)
+
+[node name="MangoOrchard3" parent="LOD0_Detailed" instance=ExtResource("4_mango")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0, -150)
+
+[node name="LOD1_Medium" type="Node3D" parent="."]
+
+[node name="Collisions" type="Node3D" parent="."]
+
+[node name="StaticGround" type="StaticBody3D" parent="Collisions"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Collisions/StaticGround"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("Box_Ground")

@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://d3elecpole001"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_pole"]
+height = 8.5
+radius = 0.22
+
+[sub_resource type="StandardMaterial3D" id="Mat_ConcretePole"]
+albedo_color = Color(0.55, 0.56, 0.58, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Mat_SteelCrossarm"]
+albedo_color = Color(0.28, 0.3, 0.32, 1)
+metallic = 0.7
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_Transformer"]
+albedo_color = Color(0.25, 0.35, 0.28, 1)
+metallic = 0.6
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_BlackCables"]
+albedo_color = Color(0.08, 0.08, 0.09, 1)
+roughness = 0.9
+
+[node name="ElectricPole" type="StaticBody3D"]
+collision_layer = 1
+collision_mask = 30
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.25, 0)
+shape = SubResource("CylinderShape3D_pole")
+
+[node name="PoleMesh" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.25, 0)
+radius = 0.18
+height = 8.5
+sides = 12
+material = SubResource("Mat_ConcretePole")
+
+[node name="CrossarmUpper" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.8, 0)
+size = Vector3(1.8, 0.12, 0.12)
+material = SubResource("Mat_SteelCrossarm")
+
+[node name="CrossarmLower" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.8, 0)
+size = Vector3(1.4, 0.1, 0.1)
+material = SubResource("Mat_SteelCrossarm")
+
+[node name="TransformerBox" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 5.6, 0)
+size = Vector3(0.5, 0.8, 0.45)
+material = SubResource("Mat_Transformer")
+
+[node name="WireSagLeft" type="CSGCylinder3D" parent="."]
+transform = Transform3D(0.996195, 0.0871557, 0, -0.0871557, 0.996195, 0, 0, 0, 1, -0.7, 7.4, 0)
+radius = 0.02
+height = 1.6
+material = SubResource("Mat_BlackCables")
+
+[node name="WireSagRight" type="CSGCylinder3D" parent="."]
+transform = Transform3D(0.996195, -0.0871557, 0, 0.0871557, 0.996195, 0, 0, 0, 1, 0.7, 7.4, 0)
+radius = 0.02
+height = 1.6
+material = SubResource("Mat_BlackCables")

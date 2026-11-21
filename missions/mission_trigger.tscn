@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://d3missiontrigger001"]
+
+[ext_resource type="Script" path="res://missions/mission_trigger.gd" id="1_trigger"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interactable"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_interact"]
+height = 2.4
+radius = 2.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_TriggerGold"]
+albedo_color = Color(1, 0.8, 0.15, 0.75)
+emission_enabled = true
+emission = Color(1, 0.8, 0.15, 1)
+emission_energy_multiplier = 3.0
+transparency = 1
+
+[node name="MissionTrigger" type="Node3D"]
+script = ExtResource("1_trigger")
+
+[node name="InteractableArea" type="Area3D" parent="."]
+script = ExtResource("2_interactable")
+prompt_text = "Start Mission"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractableArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+shape = SubResource("CylinderShape3D_interact")
+
+[node name="MarkerMesh" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+radius = 0.35
+height = 2.4
+sides = 6
+material = SubResource("Mat_TriggerGold")
+
+[node name="MarkerLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 0)
+billboard = 1
+font_size = 32
+outline_size = 8
+outline_modulate = Color(0, 0, 0, 1)
+text = "[!] Mission Available"

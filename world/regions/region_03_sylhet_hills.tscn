@@ -1,0 +1,79 @@
+[gd_scene load_steps=9 format=3 uid="uid://region03sylhet001"]
+
+[ext_resource type="Script" path="res://world/world_tile.gd" id="1_tile"]
+[ext_resource type="PackedScene" path="res://environment/architecture/tea_bungalow.tscn" id="2_bungalow"]
+[ext_resource type="PackedScene" path="res://environment/foliage/tea_bush.tscn" id="3_bush"]
+[ext_resource type="PackedScene" path="res://environment/infrastructure/water_surface.tscn" id="4_water"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_SylhetGreen"]
+albedo_color = Color(0.22, 0.55, 0.28, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_HillRoad"]
+albedo_color = Color(0.18, 0.2, 0.22, 1)
+
+[sub_resource type="BoxShape3D" id="Box_Ground"]
+size = Vector3(512, 1, 512)
+
+[node name="Region03Sylhet" type="Node3D"]
+script = ExtResource("1_tile")
+chunk_coord = Vector2i(1, 1)
+chunk_size_meters = 512.0
+region_id = "sylhet"
+region_name = "Sylhet Tea Gardens & Wetlands"
+region_bangla = "সিলেট চা বাগান ও হাওর"
+has_north_road = false
+has_south_road = true
+has_east_road = false
+has_west_road = true
+has_river_channel = true
+
+[node name="Terrain" type="Node3D" parent="."]
+
+[node name="TeaHillsGround" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(512, 1, 512)
+material = SubResource("Mat_SylhetGreen")
+
+[node name="Hill1" type="CSGSphere3D" parent="Terrain"]
+transform = Transform3D(1.8, 0, 0, 0, 0.45, 0, 0, 0, 1.8, -120, 0, -80)
+radius = 45.0
+material = SubResource("Mat_SylhetGreen")
+
+[node name="Hill2" type="CSGSphere3D" parent="Terrain"]
+transform = Transform3D(1.6, 0, 0, 0, 0.5, 0, 0, 0, 1.6, 100, 0, 100)
+radius = 40.0
+material = SubResource("Mat_SylhetGreen")
+
+[node name="SylhetExpresswayNH2" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+size = Vector3(16, 0.1, 512)
+material = SubResource("Mat_HillRoad")
+
+[node name="HaorWetlands" parent="Terrain" instance=ExtResource("4_water")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -120, -0.2, 120)
+
+[node name="LOD0_Detailed" type="Node3D" parent="."]
+
+[node name="TeaEstateBungalow" parent="LOD0_Detailed" instance=ExtResource("2_bungalow")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 80, 0, -60)
+
+[node name="TeaBushRow1" parent="LOD0_Detailed" instance=ExtResource("3_bush")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60, 0, -40)
+
+[node name="TeaBushRow2" parent="LOD0_Detailed" instance=ExtResource("3_bush")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 0, -40)
+
+[node name="TeaBushRow3" parent="LOD0_Detailed" instance=ExtResource("3_bush")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, -40)
+
+[node name="LOD1_Medium" type="Node3D" parent="."]
+
+[node name="Collisions" type="Node3D" parent="."]
+
+[node name="StaticGround" type="StaticBody3D" parent="Collisions"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Collisions/StaticGround"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("Box_Ground")

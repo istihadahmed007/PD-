@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://thatchedhut001"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_ClayWall"]
+albedo_color = Color(0.65, 0.55, 0.42, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_StrawRoof"]
+albedo_color = Color(0.72, 0.62, 0.28, 1)
+
+[sub_resource type="BoxShape3D" id="Box_hut"]
+size = Vector3(6, 4, 5)
+
+[node name="ThatchedHut" type="StaticBody3D"]
+
+[node name="MudWalls" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+size = Vector3(5.5, 2.5, 4.5)
+material = SubResource("Mat_ClayWall")
+
+[node name="StrawRoof" type="CSGBox3D" parent="."]
+transform = Transform3D(0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0, 1, 0, 3.2, 0)
+size = Vector3(4.8, 1.5, 5.2)
+material = SubResource("Mat_StrawRoof")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+shape = SubResource("Box_hut")

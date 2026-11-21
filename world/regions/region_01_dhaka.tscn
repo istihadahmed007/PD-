@@ -1,0 +1,84 @@
+[gd_scene load_steps=12 format=3 uid="uid://region01dhaka001"]
+
+[ext_resource type="Script" path="res://world/world_tile.gd" id="1_tile"]
+[ext_resource type="PackedScene" path="res://environment/architecture/residential_flats.tscn" id="2_flats"]
+[ext_resource type="PackedScene" path="res://environment/architecture/commercial_market.tscn" id="3_market"]
+[ext_resource type="PackedScene" path="res://environment/architecture/police_station.tscn" id="4_thana"]
+[ext_resource type="PackedScene" path="res://environment/architecture/auto_workshop.tscn" id="5_workshop"]
+[ext_resource type="PackedScene" path="res://environment/architecture/tea_stall_tong.tscn" id="6_tong"]
+[ext_resource type="PackedScene" path="res://environment/infrastructure/canal_bridge.tscn" id="7_bridge"]
+[ext_resource type="PackedScene" path="res://environment/infrastructure/water_surface.tscn" id="8_water"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_DhakaAsphalt"]
+albedo_color = Color(0.2, 0.22, 0.24, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="Mat_Highway"]
+albedo_color = Color(0.12, 0.14, 0.15, 1)
+
+[sub_resource type="BoxShape3D" id="Box_Ground"]
+size = Vector3(512, 1, 512)
+
+[node name="Region01Dhaka" type="Node3D"]
+script = ExtResource("1_tile")
+chunk_coord = Vector2i(0, 0)
+chunk_size_meters = 512.0
+region_id = "dhaka"
+region_name = "Metropolitan Dhaka"
+region_bangla = "মেট্রোপলিটন ঢাকা"
+has_north_road = true
+has_south_road = true
+has_east_road = true
+has_west_road = true
+has_river_channel = true
+
+[node name="Terrain" type="Node3D" parent="."]
+
+[node name="GroundMesh" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(512, 1, 512)
+material = SubResource("Mat_DhakaAsphalt")
+
+[node name="NationalHighwaySpine" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+size = Vector3(16, 0.1, 512)
+material = SubResource("Mat_Highway")
+
+[node name="EastWestConnector" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+size = Vector3(512, 0.1, 16)
+material = SubResource("Mat_Highway")
+
+[node name="BurigangaCanal" parent="Terrain" instance=ExtResource("8_water")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 50)
+
+[node name="LOD0_Detailed" type="Node3D" parent="."]
+
+[node name="ResidentialBlock" parent="LOD0_Detailed" instance=ExtResource("2_flats")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -80, 0, -60)
+
+[node name="CommercialBazaar" parent="LOD0_Detailed" instance=ExtResource("3_market")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60, 0, 80)
+
+[node name="LalbaghThana" parent="LOD0_Detailed" instance=ExtResource("4_thana")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 80, 0, -80)
+
+[node name="AutoWorkshop" parent="LOD0_Detailed" instance=ExtResource("5_workshop")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -120, 0, 120)
+
+[node name="BismillahTong" parent="LOD0_Detailed" instance=ExtResource("6_tong")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, 20)
+
+[node name="CanalBridge" parent="LOD0_Detailed" instance=ExtResource("7_bridge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 50)
+
+[node name="LOD1_Medium" type="Node3D" parent="."]
+
+[node name="Collisions" type="Node3D" parent="."]
+
+[node name="StaticGround" type="StaticBody3D" parent="Collisions"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Collisions/StaticGround"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("Box_Ground")

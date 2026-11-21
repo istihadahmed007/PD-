@@ -1,0 +1,167 @@
+[gd_scene format=3 uid="uid://d3missionlog001"]
+
+[ext_resource type="Script" path="res://ui/mission_ui/mission_log_modal.gd" id="1_script"]
+
+[node name="MissionLogModal" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -380.0
+offset_top = -260.0
+offset_right = 380.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 15.0
+offset_right = -20.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="HeaderLabel" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 20
+text = "MISSION LOG & DOSSIER (মিশন লগ ও ইতিহাস)"
+horizontal_alignment = 1
+
+[node name="TabContainer" type="TabContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActiveMission" type="TabBar" parent="Panel/VBox/TabContainer"]
+layout_mode = 2
+text = "Active Objective"
+
+[node name="VBox" type="VBoxContainer" parent="Panel/VBox/TabContainer/ActiveMission"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="Panel/VBox/TabContainer/ActiveMission/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "Mission Title"
+
+[node name="StatusLabel" type="Label" parent="Panel/VBox/TabContainer/ActiveMission/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 14
+text = "STATUS: IN PROGRESS"
+
+[node name="DescLabel" type="Label" parent="Panel/VBox/TabContainer/ActiveMission/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "Objective Description..."
+autowrap_mode = 3
+
+[node name="RewardLabel" type="Label" parent="Panel/VBox/TabContainer/ActiveMission/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 15
+text = "Reward: ৳0 BDT"
+
+[node name="MissionHistory" type="TabBar" parent="Panel/VBox/TabContainer"]
+visible = false
+layout_mode = 2
+text = "Completed Missions"
+
+[node name="VBox" type="VBoxContainer" parent="Panel/VBox/TabContainer/MissionHistory"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="HistoryList" type="ItemList" parent="Panel/VBox/TabContainer/MissionHistory/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DetailsLabel" type="Label" parent="Panel/VBox/TabContainer/MissionHistory/VBox"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 13
+text = "Select a completed mission above to inspect."
+autowrap_mode = 3
+
+[node name="CharacterDossier" type="TabBar" parent="Panel/VBox/TabContainer"]
+visible = false
+layout_mode = 2
+text = "Story Dossier"
+
+[node name="Scroll" type="ScrollContainer" parent="Panel/VBox/TabContainer/CharacterDossier"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DossierText" type="Label" parent="Panel/VBox/TabContainer/CharacterDossier/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.88, 0.92, 1)
+theme_override_font_sizes/font_size = 13
+text = "JOYNAL \"JOY\" ABEDIN (Protagonist)
+Former river launch pilot and master diesel mechanic defending his family against predatory dredging cartels in the Buriganga delta.
+
+KABIR \"USTAD\" MOLLAH (Mechanic Ally)
+Veteran owner of Bhai Bhai Auto Workshop. Master tuner and trusted friend of Joy's late father.
+
+NILA CHOWDHURY (Investigative Journalist)
+Tenacious investigative reporter for Dainik Prerona uncovering financial extortion in the sand syndicates.
+
+CHAIRMAN AFSARUL HUQ (Antagonist)
+Tycoon behind the illicit Balu Syndicate controlling sand dredging barges and compromised civic enforcement."
+autowrap_mode = 3
+
+[node name="Footer" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+alignment = 2
+
+[node name="CloseBtn" type="Button" parent="Panel/VBox/Footer"]
+custom_minimum_size = Vector2(120, 36)
+layout_mode = 2
+text = "Close [ESC / J]"

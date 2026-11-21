@@ -1,0 +1,62 @@
+[gd_scene load_steps=8 format=3 uid="uid://shopstation001"]
+
+[ext_resource type="Script" path="res://scripts/economy/shop_station.gd" id="1_station"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interact"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_Counter"]
+albedo_color = Color(0.42, 0.28, 0.18, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_Awning"]
+albedo_color = Color(0.85, 0.22, 0.18, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Signboard"]
+albedo_color = Color(0.12, 0.12, 0.14, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_prox"]
+size = Vector3(2.6, 2.5, 2.6)
+
+[node name="ShopStation" type="Node3D"]
+script = ExtResource("1_station")
+
+[node name="CounterMesh" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+size = Vector3(2.0, 1.0, 0.8)
+material = SubResource("Mat_Counter")
+
+[node name="Awning" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 2.3, 0.2)
+size = Vector3(2.4, 0.1, 1.6)
+material = SubResource("Mat_Awning")
+
+[node name="Sign" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 0.8)
+
+[node name="SignMesh" type="CSGBox3D" parent="Sign"]
+size = Vector3(2.2, 0.5, 0.08)
+material = SubResource("Mat_Signboard")
+
+[node name="Label3D" type="Label3D" parent="Sign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.05)
+text = "Mama Tong Cha Stall
+মামা টং চা দোকান"
+font_size = 18
+modulate = Color(1, 0.85, 0.2, 1)
+outline_modulate = Color(0, 0, 0, 1)
+outline_size = 4
+
+[node name="Lamp" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0.4)
+light_color = Color(1, 0.85, 0.55, 1)
+light_energy = 1.4
+omni_range = 5.0
+
+[node name="Interactable" type="Area3D" parent="."]
+collision_layer = 64
+collision_mask = 2
+script = ExtResource("2_interact")
+prompt_text = "Browse Shop"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0.8)
+shape = SubResource("BoxShape3D_prox")

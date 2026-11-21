@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://d3resflats001"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_FlatPlaster"]
+albedo_color = Color(0.82, 0.78, 0.72, 1)
+roughness = 0.88
+
+[sub_resource type="StandardMaterial3D" id="Mat_BalconyGrill"]
+albedo_color = Color(0.18, 0.2, 0.22, 1)
+metallic = 0.8
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_WindowGlass"]
+albedo_color = Color(0.2, 0.28, 0.35, 1)
+metallic = 0.5
+roughness = 0.2
+
+[sub_resource type="StandardMaterial3D" id="Mat_WaterTank"]
+albedo_color = Color(0.1, 0.25, 0.55, 1)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_ACUnit"]
+albedo_color = Color(0.88, 0.88, 0.9, 1)
+roughness = 0.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_flats"]
+size = Vector3(14, 11, 12)
+
+[node name="ResidentialFlats" type="StaticBody3D"]
+collision_layer = 1
+collision_mask = 31
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 0)
+shape = SubResource("BoxShape3D_flats")
+
+[node name="CSGBuilding" type="CSGCombiner3D" parent="."]
+use_collision = true
+collision_layer = 1
+collision_mask = 31
+
+[node name="MainBuildingBlock" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 0)
+size = Vector3(14, 11, 12)
+material = SubResource("Mat_FlatPlaster")
+
+[node name="RoofParapet" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.4, 0)
+size = Vector3(14.2, 0.8, 12.2)
+material = SubResource("Mat_FlatPlaster")
+
+[node name="RoofCutout" type="CSGBox3D" parent="CSGBuilding/RoofParapet"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+operation = 2
+size = Vector3(13.4, 1.0, 11.4)
+
+[node name="BalconyFloor1" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.0, 6.7)
+size = Vector3(10, 0.25, 1.4)
+material = SubResource("Mat_FlatPlaster")
+
+[node name="BalconyGrill1" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.6, 7.35)
+size = Vector3(10, 0.9, 0.1)
+material = SubResource("Mat_BalconyGrill")
+
+[node name="BalconyFloor2" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 6.7)
+size = Vector3(10, 0.25, 1.4)
+material = SubResource("Mat_FlatPlaster")
+
+[node name="BalconyGrill2" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.1, 7.35)
+size = Vector3(10, 0.9, 0.1)
+material = SubResource("Mat_BalconyGrill")
+
+[node name="WaterTank1" type="CSGCylinder3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 12.0, -3.5)
+radius = 0.9
+height = 1.6
+sides = 16
+material = SubResource("Mat_WaterTank")
+
+[node name="WaterTank2" type="CSGCylinder3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 12.0, -3.5)
+radius = 0.9
+height = 1.6
+sides = 16
+material = SubResource("Mat_WaterTank")
+
+[node name="ACCompressor1" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 5.0, 6.2)
+size = Vector3(0.8, 0.6, 0.4)
+material = SubResource("Mat_ACUnit")
+
+[node name="ACCompressor2" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 8.5, 6.2)
+size = Vector3(0.8, 0.6, 0.4)
+material = SubResource("Mat_ACUnit")

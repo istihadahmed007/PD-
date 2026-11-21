@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://teabungalow001"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_WoodWall"]
+albedo_color = Color(0.85, 0.82, 0.75, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_GreenRoof"]
+albedo_color = Color(0.12, 0.38, 0.22, 1)
+
+[sub_resource type="BoxShape3D" id="Box_bungalow"]
+size = Vector3(16, 6, 12)
+
+[node name="TeaBungalow" type="StaticBody3D"]
+
+[node name="Plinth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+size = Vector3(17, 1, 13)
+material = SubResource("Mat_WoodWall")
+
+[node name="Walls" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+size = Vector3(15, 4, 11)
+material = SubResource("Mat_WoodWall")
+
+[node name="PitchedRoof" type="CSGBox3D" parent="."]
+transform = Transform3D(0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0, 1, 0, 6.2, 0)
+size = Vector3(12, 2, 14)
+material = SubResource("Mat_GreenRoof")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+shape = SubResource("Box_bungalow")

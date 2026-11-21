@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://d3marketrow001"]
+
+[ext_resource type="Texture2D" path="res://assets/textures/signboards/sign_grocery.png" id="1_signgrocery"]
+[ext_resource type="Texture2D" path="res://assets/textures/signboards/sign_pharmacy.png" id="2_signpharmacy"]
+[ext_resource type="Texture2D" path="res://assets/textures/signboards/sign_sweetmeat.png" id="3_signsweetmeat"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_MarketPlaster"]
+albedo_color = Color(0.75, 0.72, 0.68, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_MetalShutter"]
+albedo_color = Color(0.5, 0.52, 0.55, 1)
+metallic = 0.7
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_AwningStripes"]
+albedo_color = Color(0.85, 0.25, 0.2, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_AwningGreen"]
+albedo_color = Color(0.15, 0.55, 0.25, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_SignGrocery"]
+albedo_texture = ExtResource("1_signgrocery")
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="Mat_SignPharmacy"]
+albedo_texture = ExtResource("2_signpharmacy")
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="Mat_SignSweetmeat"]
+albedo_texture = ExtResource("3_signsweetmeat")
+roughness = 0.45
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_market"]
+size = Vector3(26, 6, 8)
+
+[node name="CommercialMarket" type="StaticBody3D"]
+collision_layer = 1
+collision_mask = 31
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+shape = SubResource("BoxShape3D_market")
+
+[node name="CSGBuilding" type="CSGCombiner3D" parent="."]
+use_collision = true
+collision_layer = 1
+collision_mask = 31
+
+[node name="MainBuildingBlock" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -1)
+size = Vector3(26, 6, 8)
+material = SubResource("Mat_MarketPlaster")
+
+[node name="ShopShutter1" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, 1.6, 3.02)
+size = Vector3(6.5, 3.2, 0.1)
+material = SubResource("Mat_MetalShutter")
+
+[node name="SignboardGrocery" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, 3.8, 3.08)
+size = Vector3(7.2, 1.4, 0.08)
+material = SubResource("Mat_SignGrocery")
+
+[node name="AwningGrocery" type="CSGPolygon3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.1, 3.0, 3.05)
+polygon = PackedVector2Array(0, 0, 1.4, -0.6, 0, -0.1)
+depth = 7.2
+material = SubResource("Mat_AwningStripes")
+
+[node name="ShopShutter2" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 3.02)
+size = Vector3(6.5, 3.2, 0.1)
+material = SubResource("Mat_MetalShutter")
+
+[node name="SignboardPharmacy" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.8, 3.08)
+size = Vector3(7.2, 1.4, 0.08)
+material = SubResource("Mat_SignPharmacy")
+
+[node name="AwningPharmacy" type="CSGPolygon3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6, 3.0, 3.05)
+polygon = PackedVector2Array(0, 0, 1.4, -0.6, 0, -0.1)
+depth = 7.2
+material = SubResource("Mat_AwningGreen")
+
+[node name="ShopShutter3" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 1.6, 3.02)
+size = Vector3(6.5, 3.2, 0.1)
+material = SubResource("Mat_MetalShutter")
+
+[node name="SignboardSweetmeat" type="CSGBox3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 3.8, 3.08)
+size = Vector3(7.2, 1.4, 0.08)
+material = SubResource("Mat_SignSweetmeat")
+
+[node name="AwningSweetmeat" type="CSGPolygon3D" parent="CSGBuilding"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9, 3.0, 3.05)
+polygon = PackedVector2Array(0, 0, 1.4, -0.6, 0, -0.1)
+depth = 7.2
+material = SubResource("Mat_AwningStripes")

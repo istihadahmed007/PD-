@@ -1,0 +1,254 @@
+[gd_scene format=3 uid="uid://d3mainmenu001"]
+
+[ext_resource type="Script" path="res://ui/menu/main_menu.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://d3settingsmodal001" path="res://ui/menu/settings_modal.tscn" id="2_settings"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.08, 0.12, 1)
+
+[node name="TitleBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -350.0
+offset_top = 80.0
+offset_right = 350.0
+offset_bottom = 220.0
+grow_horizontal = 2
+theme_override_constants/separation = 6
+
+[node name="TitleEnglish" type="Label" parent="TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.25, 1)
+theme_override_font_sizes/font_size = 46
+text = "DHAKA THEFT AUTO"
+horizontal_alignment = 1
+
+[node name="TitleBengali" type="Label" parent="TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.85, 0.95, 1)
+theme_override_font_sizes/font_size = 28
+text = "ঢাকা থেফট অটো"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.8, 0.85, 0.8)
+theme_override_font_sizes/font_size = 14
+text = "An Original Bangladesh Open-World Crime Action Saga"
+horizontal_alignment = 1
+
+[node name="MenuButtons" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -20.0
+offset_right = 160.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="BtnNewGame" type="Button" parent="MenuButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+text = "New Game (নতুন খেলা)"
+
+[node name="BtnContinue" type="Button" parent="MenuButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Continue"
+
+[node name="BtnLoad" type="Button" parent="MenuButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Load Save Slot..."
+
+[node name="BtnSettings" type="Button" parent="MenuButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Settings & Graphics..."
+
+[node name="BtnCredits" type="Button" parent="MenuButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Credits & Licenses"
+
+[node name="BtnExit" type="Button" parent="MenuButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Quit to Windows"
+
+[node name="VersionLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -40.0
+offset_right = -20.0
+offset_bottom = -15.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.5, 0.55, 0.6, 0.75)
+theme_override_font_sizes/font_size = 12
+text = "DTA Version 1.0 (Gold Release) | Godot 4.x"
+horizontal_alignment = 2
+
+[node name="SlotsPanel" type="Panel" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -180.0
+offset_right = 220.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="SlotsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="SlotsTitle" type="Label" parent="SlotsPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 18
+text = "SELECT SAVE SLOT"
+horizontal_alignment = 1
+
+[node name="BtnSlot1" type="Button" parent="SlotsPanel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Slot 1: Empty"
+
+[node name="BtnSlot2" type="Button" parent="SlotsPanel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Slot 2: Empty"
+
+[node name="BtnSlot3" type="Button" parent="SlotsPanel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Slot 3: Empty"
+
+[node name="BtnSlotsBack" type="Button" parent="SlotsPanel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "Back"
+
+[node name="CreditsPanel" type="Panel" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -220.0
+offset_right = 320.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CreditsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 25.0
+offset_top = 20.0
+offset_right = -25.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="CreditsTitle" type="Label" parent="CreditsPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 20
+text = "CREDITS & ACKNOWLEDGMENTS"
+horizontal_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="CreditsPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CreditsText" type="Label" parent="CreditsPanel/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+text = "DHAKA THEFT AUTO (DTA) — GOLD MASTER RELEASE
+
+• Game Design & Engineering: Open-World Action Architecture
+• Narrative & Cultural Consultant: Original Bangladesh Lore & Delta Cartel Narrative
+• Audio Synthesis: 100% Original Synthesized Delta Soundscape & Soundtracks
+• Engine: Godot Engine 4.x Forward+ / Jolt 3D Physics
+• Platform: Windows PC 64-bit
+
+Asset Licenses:
+• All 3D meshes, custom PBR shaders, textures, character portraits, and audio files are 100% original, CC0, or procedurally synthesized specifically for this game release.
+• No copyrighted external audio, textures, or code libraries were utilized."
+autowrap_mode = 3
+
+[node name="BtnCreditsClose" type="Button" parent="CreditsPanel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 36)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Close"
+
+[node name="SettingsModal" parent="." instance=ExtResource("2_settings")]
+unique_name_in_owner = true
+visible = false

@@ -1,0 +1,69 @@
+[gd_scene load_steps=9 format=3 uid="uid://region04chattogram001"]
+
+[ext_resource type="Script" path="res://world/world_tile.gd" id="1_tile"]
+[ext_resource type="PackedScene" path="res://environment/infrastructure/container_stack.tscn" id="2_stack"]
+[ext_resource type="PackedScene" path="res://environment/infrastructure/port_gantry_crane.tscn" id="3_crane"]
+[ext_resource type="PackedScene" path="res://environment/infrastructure/water_surface.tscn" id="4_water"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_PortConcrete"]
+albedo_color = Color(0.3, 0.32, 0.35, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="Mat_PortRoad"]
+albedo_color = Color(0.12, 0.14, 0.16, 1)
+
+[sub_resource type="BoxShape3D" id="Box_Ground"]
+size = Vector3(512, 1, 512)
+
+[node name="Region04Chattogram" type="Node3D"]
+script = ExtResource("1_tile")
+chunk_coord = Vector2i(1, -1)
+chunk_size_meters = 512.0
+region_id = "chattogram"
+region_name = "Chattogram Maritime Port"
+region_bangla = "চট্টগ্রাম সমুদ্র বন্দর"
+has_north_road = true
+has_south_road = true
+has_east_road = false
+has_west_road = true
+has_river_channel = true
+
+[node name="Terrain" type="Node3D" parent="."]
+
+[node name="PortApronGround" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(512, 1, 512)
+material = SubResource("Mat_PortConcrete")
+
+[node name="GrandCoastalHighwayNH3" type="CSGBox3D" parent="Terrain"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+size = Vector3(16, 0.1, 512)
+material = SubResource("Mat_PortRoad")
+
+[node name="KarnaphuliHarbor" parent="Terrain" instance=ExtResource("4_water")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 140, -0.2, 0)
+
+[node name="LOD0_Detailed" type="Node3D" parent="."]
+
+[node name="ContainerStack1" parent="LOD0_Detailed" instance=ExtResource("2_stack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -80, 0, -80)
+
+[node name="ContainerStack2" parent="LOD0_Detailed" instance=ExtResource("2_stack")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -80, 0, 40)
+
+[node name="GantryCrane1" parent="LOD0_Detailed" instance=ExtResource("3_crane")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60, 0, -60)
+
+[node name="GantryCrane2" parent="LOD0_Detailed" instance=ExtResource("3_crane")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 60, 0, 80)
+
+[node name="LOD1_Medium" type="Node3D" parent="."]
+
+[node name="Collisions" type="Node3D" parent="."]
+
+[node name="StaticGround" type="StaticBody3D" parent="Collisions"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Collisions/StaticGround"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("Box_Ground")

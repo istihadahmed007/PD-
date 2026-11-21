@@ -1,0 +1,148 @@
+[gd_scene format=3 uid="uid://d3pickup001"]
+
+[ext_resource type="Script" path="res://vehicles/pickup/pickup_truck.gd" id="1_pickup"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable.gd" id="2_interactable"]
+[ext_resource type="Script" path="res://vehicles/vehicle_camera_3d.gd" id="3_camera"]
+[ext_resource type="AudioStream" path="res://audio/vehicles/engine_suv_loop.wav" id="4_enginesound"]
+[ext_resource type="AudioStream" path="res://audio/vehicles/horn_suv.wav" id="5_hornsound"]
+[ext_resource type="AudioStream" path="res://audio/vehicles/tire_skid.wav" id="6_skidsound"]
+[ext_resource type="AudioStream" path="res://audio/vehicles/vehicle_impact.wav" id="7_impactsound"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_chassis"]
+size = Vector3(1.9, 1.0, 5.0)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_interact"]
+height = 2.0
+radius = 2.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_PickupPaint"]
+albedo_color = Color(0.18, 0.32, 0.58, 1)
+metallic = 0.8
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="Mat_CargoBed"]
+albedo_color = Color(0.25, 0.26, 0.28, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_TireRubber"]
+albedo_color = Color(0.12, 0.12, 0.13, 1)
+roughness = 0.92
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pickup_wheel"]
+material = SubResource("Mat_TireRubber")
+top_radius = 0.38
+bottom_radius = 0.38
+height = 0.25
+radial_segments = 16
+
+[node name="PickupTruck" type="VehicleBody3D" groups=["damageables", "vehicles"]]
+mass = 1850.0
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, -0.1, 0)
+script = ExtResource("1_pickup")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_chassis")
+
+[node name="VisualModel" type="Node3D" parent="."]
+
+[node name="CabFront" type="CSGBox3D" parent="VisualModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -0.6)
+size = Vector3(1.88, 1.1, 2.4)
+material = SubResource("Mat_PickupPaint")
+
+[node name="CargoBed" type="CSGBox3D" parent="VisualModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 1.4)
+size = Vector3(1.88, 0.6, 2.2)
+material = SubResource("Mat_CargoBed")
+
+[node name="WheelFrontLeft" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.88, 0.38, -1.45)
+use_as_steering = true
+wheel_radius = 0.38
+wheel_rest_length = 0.16
+wheel_friction_slip = 3.9
+suspension_stiffness = 36.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelFrontLeft"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_pickup_wheel")
+
+[node name="WheelFrontRight" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.88, 0.38, -1.45)
+use_as_steering = true
+wheel_radius = 0.38
+wheel_rest_length = 0.16
+wheel_friction_slip = 3.9
+suspension_stiffness = 36.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelFrontRight"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_pickup_wheel")
+
+[node name="WheelRearLeft" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.88, 0.38, 1.45)
+use_as_traction = true
+wheel_radius = 0.38
+wheel_rest_length = 0.16
+wheel_friction_slip = 4.0
+suspension_stiffness = 40.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelRearLeft"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_pickup_wheel")
+
+[node name="WheelRearRight" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.88, 0.38, 1.45)
+use_as_traction = true
+wheel_radius = 0.38
+wheel_rest_length = 0.16
+wheel_friction_slip = 4.0
+suspension_stiffness = 40.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WheelRearRight"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_pickup_wheel")
+
+[node name="Lights" type="Node3D" parent="."]
+
+[node name="Headlights" type="Node3D" parent="Lights"]
+
+[node name="SpotLeft" type="SpotLight3D" parent="Lights/Headlights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 0.75, -2.48)
+light_energy = 3.0
+spot_range = 38.0
+
+[node name="SpotRight" type="SpotLight3D" parent="Lights/Headlights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 0.75, -2.48)
+light_energy = 3.0
+spot_range = 38.0
+
+[node name="Audio" type="Node3D" parent="."]
+
+[node name="EngineAudio" type="AudioStreamPlayer3D" parent="Audio"]
+stream = ExtResource("4_enginesound")
+volume_db = -3.0
+
+[node name="HornAudio" type="AudioStreamPlayer3D" parent="Audio"]
+stream = ExtResource("5_hornsound")
+
+[node name="SkidAudio" type="AudioStreamPlayer3D" parent="Audio"]
+stream = ExtResource("6_skidsound")
+
+[node name="ImpactAudio" type="AudioStreamPlayer3D" parent="Audio"]
+stream = ExtResource("7_impactsound")
+
+[node name="InteractableArea" type="Area3D" parent="."]
+collision_layer = 64
+collision_mask = 2
+script = ExtResource("2_interactable")
+prompt_text = "Drive Padma Utility Pickup"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractableArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0.8, -0.5)
+shape = SubResource("CylinderShape3D_interact")
+
+[node name="VehicleCamera3D" type="Node3D" parent="."]
+script = ExtResource("3_camera")
