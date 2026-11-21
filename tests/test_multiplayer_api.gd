@@ -17,5 +17,12 @@ func _init() -> void:
 	rep_config.property_set_spawn(NodePath(".:sync_position"), true)
 	print("[PASS] SceneReplicationConfig created and properties configured: OK")
 	
+	# Test 3: WebSocketMultiplayerPeer (Browser WSS support)
+	var ws_peer := WebSocketMultiplayerPeer.new()
+	var ws_err := ws_peer.create_server(7781)
+	assert(ws_err == OK, "WebSocket server creation failed with code: %d" % ws_err)
+	print("[PASS] WebSocketMultiplayerPeer create_server on port 7781: OK")
+	ws_peer.close()
+	
 	print("--- ALL MULTIPLAYER API TESTS PASSED SUCCESSFULLY ---")
 	quit(0)

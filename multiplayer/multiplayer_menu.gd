@@ -42,7 +42,10 @@ func _init_default_values() -> void:
 	if input_nickname and input_nickname.text.is_empty():
 		input_nickname.text = NetworkManager.local_nickname
 	if input_ip and input_ip.text.is_empty():
-		input_ip.text = NetworkManager.DEFAULT_IP
+		if OS.has_feature("web"):
+			input_ip.text = "wss://bc.vartualtutor.com/game"
+		else:
+			input_ip.text = NetworkManager.DEFAULT_IP
 	if input_port and input_port.text.is_empty():
 		input_port.text = str(NetworkManager.DEFAULT_PORT)
 	if spin_max_players:

@@ -7,7 +7,7 @@
 class_name CameraController
 extends Node3D
 
-enum CAMERA_PIVOT { OVER_SHOULDER, THIRD_PERSON }
+enum CAMERA_PIVOT { OVER_SHOULDER, THIRD_PERSON, FIRST_PERSON }
 
 @export_category("Orbit & Sensitivity")
 @export var mouse_sensitivity: float = 0.0025
@@ -37,6 +37,7 @@ enum CAMERA_PIVOT { OVER_SHOULDER, THIRD_PERSON }
 var _anchor: CharacterBody3D = null
 var _euler_rotation: Vector3 = Vector3.ZERO
 var _current_pivot_type: CAMERA_PIVOT = CAMERA_PIVOT.THIRD_PERSON
+var preferred_follow_pivot: CAMERA_PIVOT = CAMERA_PIVOT.THIRD_PERSON
 
 var _aim_blend: float = 0.0
 var _current_ground_y: float = 0.0
@@ -62,6 +63,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		_rotation_input -= event.relative.x * mouse_sensitivity
 		_tilt_input -= event.relative.y * mouse_sensitivity
+	elif event.is_action_pressed("camera_toggle_view") or (event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_V):
+		cycle_camera_view()
 
 
 func _process(delta: float) -> void:
@@ -118,8 +121,15 @@ func _update_camera_transition(delta: float) -> void:
 	if _aim_target != Vector3.ZERO:
 		_over_shoulder_pivot.look_at(_aim_target)
 	
-	# Smoothly blend between third-person orbit and over-shoulder pivot transforms
-	var target_transform = _third_person_pivot.global_transform.interpolate_with(
+	var base_target_transform: Transform3D
+	if _current_pivot_type == CAMERA_PIVOT.FIRST_PERSON and _aim_blend < 0.5:
+		var head_pos = global_position + Vector3(0, 1.62, 0.12)
+		base_target_transform = Transform3D(transform.basis, head_pos)
+	else:
+		base_target_transform = _third_person_pivot.global_transform
+	
+	# Smoothly blend between follow pivot and over-shoulder pivot transforms
+	var target_transform = base_target_transform.interpolate_with(
 		_over_shoulder_pivot.global_transform,
 		_aim_blend
 	)
@@ -131,6 +141,16 @@ func _update_camera_transition(delta: float) -> void:
 	var desired_base_fov = sprint_fov if (_anchor.get("is_sprinting") == true) else explore_fov
 	var target_fov = lerpf(desired_base_fov, aim_fov, _aim_blend)
 	camera.fov = lerpf(camera.fov, target_fov, 8.0 * delta)
+
+
+func cycle_camera_view() -> void:
+	if preferred_follow_pivot == CAMERA_PIVOT.THIRD_PERSON:
+		preferred_follow_pivot = CAMERA_PIVOT.FIRST_PERSON
+	else:
+		preferred_follow_pivot = CAMERA_PIVOT.THIRD_PERSON
+	
+	if _current_pivot_type != CAMERA_PIVOT.OVER_SHOULDER:
+		set_pivot(preferred_follow_pivot)
 
 
 func _update_aim_raycast() -> void:

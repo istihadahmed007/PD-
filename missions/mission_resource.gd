@@ -57,6 +57,7 @@ var title_bengali: String:
 ##   "checkpoint": Vector3(x, y, z)
 ## }
 @export var steps: Array = []
+@export var objectives: Array[String] = []
 
 @export_category("Dialogue Sequences")
 ## Dictionary mapping dialogue_id -> Array of lines:
@@ -72,6 +73,12 @@ var title_bengali: String:
 func get_step(step_index: int) -> Dictionary:
 	if step_index >= 0 and step_index < steps.size():
 		return steps[step_index]
+	elif step_index >= 0 and step_index < objectives.size():
+		return {
+			"type": "OBJECTIVE",
+			"description": objectives[step_index],
+			"target_position": Vector3.ZERO
+		}
 	return {}
 
 
@@ -82,4 +89,4 @@ func get_dialogue(dialogue_id: String) -> Array:
 
 
 func get_total_steps() -> int:
-	return steps.size()
+	return steps.size() if steps.size() > 0 else objectives.size()

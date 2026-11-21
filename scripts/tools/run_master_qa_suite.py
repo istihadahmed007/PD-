@@ -64,6 +64,7 @@ class MasterQASuite:
         self.test_world_expansion_tiles()
         self.test_ui_and_menus()
         self.test_export_configuration()
+        self.test_multiplayer_and_deployment()
         
         print("\n" + "=" * 60)
         print(f"  QA SUMMARY: {self.passed_tests} PASSED | {self.failed_tests} FAILED | {self.total_tests} TOTAL")
@@ -294,9 +295,38 @@ class MasterQASuite:
                 content = f.read()
             has_win = 'platform="Windows Desktop"' in content
             has_exe = 'DhakaTheftAuto.exe' in content
+            has_web = 'platform="Web"' in content
             self.log("EXPORT", "Windows Desktop Export Preset", has_win and has_exe)
+            self.log("EXPORT", "Web Browser HTML5/Wasm Export Preset", has_web)
         else:
             self.log("EXPORT", "export_presets.cfg exists", False)
+
+    # 12. MULTIPLAYER & DEPLOYMENT STACK
+    def test_multiplayer_and_deployment(self):
+        print("\n--- 12. Testing Multiplayer Architecture & Deployment Stack ---")
+        deploy_files = [
+            ("Docker Compose Stack", "deploy/docker-compose.yml"),
+            ("Backend REST API", "deploy/backend/server.js"),
+            ("PostgreSQL DDL Schema", "deploy/backend/schema.sql"),
+            ("Headless Dedicated Server Dockerfile", "deploy/server/Dockerfile"),
+            ("Nginx WSS & WebAssembly Reverse Proxy", "deploy/nginx/conf.d/game.conf"),
+            ("Automated Production Deploy Script", "deploy/deploy.sh"),
+            ("GitHub Actions CI/CD Workflow", ".github/workflows/deploy.yml")
+        ]
+        
+        all_present = True
+        for name, path in deploy_files:
+            if not os.path.exists(path):
+                self.log("DEPLOY", f"Missing {name} ({path})", False)
+                all_present = False
+        self.log("DEPLOY", "Production Deployment Stack (Postgres, API, Headless Godot, Nginx WSS)", all_present)
+        
+        # Check dual-protocol support in NetworkManager
+        with open("multiplayer/network_manager.gd", "r", encoding="utf-8") as f:
+            net_code = f.read()
+        has_ws = "WebSocketMultiplayerPeer" in net_code
+        has_enet = "ENetMultiplayerPeer" in net_code
+        self.log("NET", "Dual-Stack Network Engine (WebSocket WSS + UDP/ENet)", has_ws and has_enet)
 
 if __name__ == "__main__":
     suite = MasterQASuite()

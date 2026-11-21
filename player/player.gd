@@ -31,6 +31,8 @@ enum WEAPON_TYPE {
 }
 
 @export_category("Locomotion Speeds")
+## Stealth and crouch walking speed (m/s)
+@export var crouch_speed: float = 1.8
 ## Natural street walking speed (m/s)
 @export var walk_speed: float = 3.2
 ## Standard exploring/jogging speed (m/s)
@@ -79,6 +81,7 @@ enum WEAPON_TYPE {
 var current_health: float = 100.0
 var current_stamina: float = 100.0
 var is_sprinting: bool = false
+var is_crouching: bool = false
 var is_hard_landing_recovering: bool = false
 
 # Internal State Tracking
@@ -103,6 +106,7 @@ var _shoot_cooldown_tick: float = 0.0
 var _grenade_cooldown_tick: float = 0.0
 
 # Node References
+@onready var _character_collision_shape: CollisionShape3D = $CharacterCollisionShape if has_node("CharacterCollisionShape") else null
 @onready var _camera_controller: CameraController = $CameraController
 @onready var _ground_shapecast: ShapeCast3D = $GroundShapeCast
 @onready var _grenade_aim_controller: GrenadeLauncher = $GrenadeLauncher
@@ -160,6 +164,7 @@ func _physics_process(delta: float) -> void:
 	_update_ground_elevation()
 	_update_timers(delta)
 	_handle_weapon_swapping()
+	_handle_crouch_input()
 	
 	var is_aiming := Input.is_action_pressed("aim") and is_on_floor()
 	var raw_input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
@@ -259,6 +264,8 @@ func _calculate_target_speed(raw_input: Vector2, is_aiming: bool, delta: float) 
 	var has_input := raw_input.length() > 0.1
 	
 	if wants_sprint and has_input and is_on_floor() and not is_aiming and current_stamina > 5.0:
+		if is_crouching:
+			_stand_up()
 		is_sprinting = true
 		current_stamina = maxf(0.0, current_stamina - stamina_drain_rate * delta)
 	else:
@@ -273,12 +280,52 @@ func _calculate_target_speed(raw_input: Vector2, is_aiming: bool, delta: float) 
 		return 0.0
 	elif is_aiming:
 		return walk_speed * 0.85
+	elif is_crouching:
+		return crouch_speed
 	elif is_sprinting:
 		return sprint_speed
 	elif raw_input.length() < 0.6:
 		return walk_speed
 	else:
 		return jog_speed
+
+
+func _handle_crouch_input() -> void:
+	if Input.is_action_just_pressed("crouch") or (Input.is_key_pressed(KEY_C) and Input.is_action_just_pressed("crouch")):
+		if is_crouching:
+			_stand_up()
+		elif is_on_floor():
+			_crouch_down()
+
+
+func _crouch_down() -> void:
+	is_crouching = true
+	_apply_crouch_collision(true)
+	if _character_skin and _character_skin.has_method("crouch"):
+		_character_skin.crouch()
+
+
+func _stand_up() -> void:
+	var space_state := get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(global_position + Vector3.UP * 0.6, global_position + Vector3.UP * 2.1)
+	query.exclude = [get_rid()]
+	var hit := space_state.intersect_ray(query)
+	if hit.is_empty():
+		is_crouching = false
+		_apply_crouch_collision(false)
+		if _character_skin and _character_skin.has_method("stand_up"):
+			_character_skin.stand_up()
+
+
+func _apply_crouch_collision(crouching: bool) -> void:
+	if _character_collision_shape and _character_collision_shape.shape is CapsuleShape3D:
+		var cap := _character_collision_shape.shape as CapsuleShape3D
+		if crouching:
+			cap.height = 1.2
+			_character_collision_shape.position.y = 0.6
+		else:
+			cap.height = 2.0
+			_character_collision_shape.position.y = 1.0
 
 
 func _apply_horizontal_movement(target_speed: float, delta: float) -> void:
@@ -370,7 +417,10 @@ func _update_animation_state(is_aiming: bool) -> void:
 		return
 	
 	var horizontal_speed := Vector3(velocity.x, 0.0, velocity.z).length()
-	if horizontal_speed < stopping_speed:
+	if is_crouching:
+		if _character_skin.has_method("crouch"):
+			_character_skin.crouch()
+	elif horizontal_speed < stopping_speed:
 		if _character_skin.has_method("idle"):
 			_character_skin.idle()
 	elif is_sprinting:
@@ -573,6 +623,8 @@ func _register_input_actions() -> void:
 		"camera_up": KEY_UP,
 		"camera_down": KEY_DOWN,
 		"vehicle_horn": KEY_H,
+		"crouch": KEY_C,
+		"camera_toggle_view": KEY_V,
 	}
 	for action in INPUT_ACTIONS:
 		if InputMap.has_action(action):

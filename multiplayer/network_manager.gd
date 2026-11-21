@@ -25,6 +25,8 @@ signal player_list_updated(players_dict: Dictionary)
 const DEFAULT_PORT: int = 7777
 const DEFAULT_MAX_PLAYERS: int = 16
 const DEFAULT_IP: String = "127.0.0.1"
+const DEFAULT_PRODUCTION_DOMAIN: String = "bc.vartualtutor.com"
+const DEFAULT_WSS_URL: String = "wss://bc.vartualtutor.com/game"
 const WORLD_SCENE_PATH: String = "res://multiplayer/multiplayer_world.tscn"
 const MENU_SCENE_PATH: String = "res://multiplayer/multiplayer_menu.tscn"
 
@@ -36,7 +38,8 @@ enum NetworkRole {
 }
 
 var current_role: NetworkRole = NetworkRole.NONE
-var server_peer: ENetMultiplayerPeer = null
+var server_peer: MultiplayerPeer = null
+var is_websocket_mode: bool = false
 var connection_status: String = "Disconnected"
 var local_nickname: String = "Joy"
 var current_port: int = DEFAULT_PORT
@@ -71,29 +74,42 @@ func _bind_multiplayer_signals() -> void:
 # ==============================================================================
 # SERVER INITIALIZATION (DEDICATED OR LISTEN)
 # ==============================================================================
-func start_server(port: int = DEFAULT_PORT, max_clients: int = DEFAULT_MAX_PLAYERS, is_dedicated: bool = false, host_name: String = "Host") -> Error:
+func start_server(port: int = DEFAULT_PORT, max_clients: int = DEFAULT_MAX_PLAYERS, is_dedicated: bool = false, host_name: String = "Host", use_websocket: bool = false) -> Error:
 	disconnect_peer()
 	
 	current_port = port
 	max_players = max_clients
+	is_websocket_mode = use_websocket
 	local_nickname = host_name.strip_edges()
 	if local_nickname.is_empty():
 		local_nickname = "Host"
 	
-	server_peer = ENetMultiplayerPeer.new()
-	var err := server_peer.create_server(current_port, max_players)
-	if err != OK:
-		var err_msg := "Failed to create server on UDP port %d (Error code: %d)" % [current_port, err]
-		_log_error(err_msg)
-		_set_status("Error: " + err_msg)
-		return err
+	if use_websocket:
+		var ws_peer := WebSocketMultiplayerPeer.new()
+		var err := ws_peer.create_server(current_port)
+		if err != OK:
+			var err_msg := "Failed to create WebSocket server on port %d (Error code: %d)" % [current_port, err]
+			_log_error(err_msg)
+			_set_status("Error: " + err_msg)
+			return err
+		server_peer = ws_peer
+	else:
+		var enet_peer := ENetMultiplayerPeer.new()
+		var err := enet_peer.create_server(current_port, max_players)
+		if err != OK:
+			var err_msg := "Failed to create server on UDP port %d (Error code: %d)" % [current_port, err]
+			_log_error(err_msg)
+			_set_status("Error: " + err_msg)
+			return err
+		server_peer = enet_peer
 	
 	multiplayer.multiplayer_peer = server_peer
 	current_role = NetworkRole.DEDICATED_SERVER if is_dedicated else NetworkRole.LISTEN_HOST
 	
+	var proto_name := "WebSocket (WSS-Ready)" if use_websocket else "UDP/ENet"
 	var mode_name := "DEDICATED SERVER" if is_dedicated else "LISTEN HOST"
-	_log_info("%s started successfully on UDP port %d (Max peers: %d)" % [mode_name, current_port, max_players])
-	_set_status("Running as %s on port %d" % [mode_name, current_port])
+	_log_info("%s started successfully on %s port %d (Max peers: %d)" % [mode_name, proto_name, current_port, max_players])
+	_set_status("Running as %s (%s) on port %d" % [mode_name, proto_name, current_port])
 	
 	players.clear()
 	
@@ -115,7 +131,7 @@ func start_server(port: int = DEFAULT_PORT, max_clients: int = DEFAULT_MAX_PLAYE
 # ==============================================================================
 # CLIENT CONNECTION
 # ==============================================================================
-func start_client(ip: String = DEFAULT_IP, port: int = DEFAULT_PORT, nickname: String = "Player") -> Error:
+func start_client(ip: String = DEFAULT_IP, port: int = DEFAULT_PORT, nickname: String = "Player", force_websocket: bool = false) -> Error:
 	disconnect_peer()
 	
 	current_ip = ip.strip_edges()
@@ -126,20 +142,41 @@ func start_client(ip: String = DEFAULT_IP, port: int = DEFAULT_PORT, nickname: S
 	if local_nickname.is_empty():
 		local_nickname = "Player_%d" % (randi() % 900 + 100)
 	
-	server_peer = ENetMultiplayerPeer.new()
-	var err := server_peer.create_client(current_ip, current_port)
-	if err != OK:
-		var err_msg := "Failed to initiate client connection to %s:%d (Error code: %d)" % [current_ip, current_port, err]
-		_log_error(err_msg)
-		_set_status("Error: " + err_msg)
-		connection_failed.emit(err_msg)
-		return err
+	var is_ws := force_websocket or OS.has_feature("web") or current_ip.begins_with("ws://") or current_ip.begins_with("wss://")
+	is_websocket_mode = is_ws
+	
+	if is_ws:
+		var ws_url := current_ip
+		if OS.has_feature("web") and (current_ip == DEFAULT_IP or current_ip.is_empty()):
+			ws_url = DEFAULT_WSS_URL
+		elif not ws_url.begins_with("ws://") and not ws_url.begins_with("wss://"):
+			ws_url = "ws://%s:%d" % [current_ip, current_port]
+		var ws_peer := WebSocketMultiplayerPeer.new()
+		var err := ws_peer.create_client(ws_url)
+		if err != OK:
+			var err_msg := "Failed to initiate WebSocket connection to %s (Error code: %d)" % [ws_url, err]
+			_log_error(err_msg)
+			_set_status("Error: " + err_msg)
+			connection_failed.emit(err_msg)
+			return err
+		server_peer = ws_peer
+		_log_info("Connecting to WebSocket server at %s as '%s'..." % [ws_url, local_nickname])
+		_set_status("Connecting via WebSocket to %s..." % ws_url)
+	else:
+		var enet_peer := ENetMultiplayerPeer.new()
+		var err := enet_peer.create_client(current_ip, current_port)
+		if err != OK:
+			var err_msg := "Failed to initiate client connection to %s:%d (Error code: %d)" % [current_ip, current_port, err]
+			_log_error(err_msg)
+			_set_status("Error: " + err_msg)
+			connection_failed.emit(err_msg)
+			return err
+		server_peer = enet_peer
+		_log_info("Connecting to server at %s:%d as '%s'..." % [current_ip, current_port, local_nickname])
+		_set_status("Connecting to %s:%d..." % [current_ip, current_port])
 	
 	multiplayer.multiplayer_peer = server_peer
 	current_role = NetworkRole.CLIENT
-	
-	_log_info("Connecting to server at %s:%d as '%s'..." % [current_ip, current_port, local_nickname])
-	_set_status("Connecting to %s:%d..." % [current_ip, current_port])
 	return OK
 
 
@@ -301,6 +338,7 @@ func _parse_cmdline_arguments() -> void:
 	
 	var is_server_requested := false
 	var is_client_requested := false
+	var use_websocket := false
 	var parsed_port := DEFAULT_PORT
 	var parsed_ip := DEFAULT_IP
 	var parsed_nick := ""
@@ -312,6 +350,8 @@ func _parse_cmdline_arguments() -> void:
 		match arg:
 			"--server", "--dedicated-server":
 				is_server_requested = true
+			"--websocket", "--ws":
+				use_websocket = true
 			"--client":
 				is_client_requested = true
 			"--port":
@@ -334,8 +374,9 @@ func _parse_cmdline_arguments() -> void:
 	
 	# Automatically start server if --server or --dedicated-server was specified
 	if is_server_requested:
-		_log_info("Command-line trigger: Starting Headless Dedicated Server on UDP port %d..." % parsed_port)
-		var err := start_server(parsed_port, parsed_max, true, "DedicatedServer")
+		var proto_str := "WebSocket" if use_websocket else "UDP/ENet"
+		_log_info("Command-line trigger: Starting Headless Dedicated Server on %s port %d..." % [proto_str, parsed_port])
+		var err := start_server(parsed_port, parsed_max, true, "DedicatedServer", use_websocket)
 		if err == OK:
 			get_tree().change_scene_to_file(WORLD_SCENE_PATH)
 	elif is_client_requested:

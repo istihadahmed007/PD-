@@ -14,6 +14,7 @@ enum LocomotionState {
 	WALK,
 	RUN,
 	SPRINT,
+	CROUCH,
 	JUMP_START,
 	JUMP_AIR,
 	FALL,
@@ -153,6 +154,25 @@ func sprint() -> void:
 	if current_state != LocomotionState.SPRINT:
 		current_state = LocomotionState.SPRINT
 		_crossfade_to("sprint", 0.15)
+
+
+func crouch() -> void:
+	if is_locked_in_animation:
+		return
+	if current_state != LocomotionState.CROUCH:
+		current_state = LocomotionState.CROUCH
+		if animation_player and animation_player.has_animation("crouch"):
+			_crossfade_to("crouch", 0.15)
+		elif visual_root:
+			var tween := create_tween()
+			tween.tween_property(visual_root, "position:y", -0.4, 0.15)
+
+
+func stand_up() -> void:
+	if visual_root:
+		var tween := create_tween()
+		tween.tween_property(visual_root, "position:y", 0.0, 0.15)
+	idle()
 
 
 func jump() -> void:

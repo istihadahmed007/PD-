@@ -68,8 +68,7 @@ func _process(_delta: float) -> void:
 	
 	var info := "=== DTA POLICE & WANTED SYSTEM DIAGNOSTICS ===
 "
-	info += "Wanted Heat Rating: %d / 5 Stars %s
-" % [stars, ("★" * stars + "☆" * (5 - stars))]
+	info += "Wanted Heat Rating: %d / 5 Stars %s\n" % [stars, ("★".repeat(stars) + "☆".repeat(5 - stars))]
 	info += "Pursuit State: %s | LOS: %s
 " % [state_name, los_status]
 	info += "Evasion Cooldown: %2.1fs / %2.1fs (Timer ticks 2x outside zone)

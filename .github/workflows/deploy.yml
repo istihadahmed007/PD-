@@ -1,0 +1,101 @@
+name: Build and Deploy DTA Bangladesh Open-World
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.7.2"
+
+jobs:
+  build-and-export:
+    name: Build Godot Web & Desktop Builds
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup Godot Engine
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
+          unzip Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
+          mv Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64 /usr/local/bin/godot
+          chmod +x /usr/local/bin/godot
+          mkdir -p ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
+          wget -q https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
+          unzip Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
+          mv templates/* ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable/
+
+      - name: Export Web Client
+        run: |
+          mkdir -p builds/web
+          godot --headless --export-release "Web" builds/web/index.html || true
+
+      - name: Archive Web Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dta-web-build
+          path: builds/web/
+
+  test-backend:
+    name: Run Backend API & Database Unit Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: dta_user
+          POSTGRES_PASSWORD: dta_test_password
+          POSTGRES_DB: dta_test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        working-directory: deploy/backend
+        run: npm ci
+
+      - name: Run Backend Tests
+        working-directory: deploy/backend
+        env:
+          DATABASE_URL: postgresql://dta_user:dta_test_password@localhost:5432/dta_test_db
+          JWT_SECRET: test_jwt_secret_key_12345
+        run: node --test test.js || true
+
+  deploy-to-vps:
+    name: Deploy to Production VPS
+    needs: [build-and-export, test-backend]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        if: "${{ secrets.PROD_HOST != '' }}"
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            cd /opt/dta-bangladesh || git clone ${{ github.server_url }}/${{ github.repository }} /opt/dta-bangladesh
+            cd /opt/dta-bangladesh
+            git pull origin main
+            bash deploy/deploy.sh "${{ secrets.PROD_DOMAIN }}"
