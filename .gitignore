@@ -8,6 +8,7 @@ bin/
 deploy/.env*
 !deploy/.env.example
 builds/
+dist/
 *.tmp
 
 deploy/backend/node_modules/
