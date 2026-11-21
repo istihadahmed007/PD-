@@ -6,3 +6,6 @@ bin/
 .env
 builds/
 *.tmp
+
+deploy/backend/node_modules/
+builds/web/
