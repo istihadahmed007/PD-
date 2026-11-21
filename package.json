@@ -1,6 +1,6 @@
 {
   "name": "dhaka-theft-auto-web",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Dhaka Theft Auto - Contemporary Bangladesh Open-World 3D Action Game Web Client",
   "scripts": {
     "build": "node scripts/vercel_build.js"
