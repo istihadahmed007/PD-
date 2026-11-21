@@ -1,0 +1,8 @@
+{
+  "name": "dhaka-theft-auto-web",
+  "version": "1.0.0",
+  "description": "Dhaka Theft Auto - Contemporary Bangladesh Open-World 3D Action Game Web Client",
+  "scripts": {
+    "build": "echo Web build ready in public"
+  }
+}
