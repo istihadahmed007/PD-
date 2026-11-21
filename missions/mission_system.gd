@@ -19,6 +19,9 @@ signal mission_retried(mission_id: String)
 @export var dialogue_ui_scene: PackedScene = preload("res://ui/mission_ui/mission_dialogue_ui.tscn")
 
 var active_mission: MissionResource = null
+var is_mission_active: bool:
+	get:
+		return active_mission != null
 var current_step_index: int = 0
 var completed_mission_ids: Array[String] = []
 
@@ -295,3 +298,13 @@ func _on_dialogue_finished() -> void:
 func _on_player_died() -> void:
 	if active_mission:
 		fail_mission("Joy collapsed from severe injuries!")
+
+
+func get_active_mission() -> MissionResource:
+	return active_mission
+
+
+func get_current_step() -> Dictionary:
+	if active_mission:
+		return active_mission.get_step(current_step_index)
+	return {}

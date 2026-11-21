@@ -51,7 +51,7 @@ func _process_ai_driving(delta: float) -> void:
 	if is_overtaking:
 		target_pos += vehicle.global_transform.basis.x * overtake_offset
 	
-	var to_target := target_pos - vehicle.global_position
+	var to_target: Vector3 = target_pos - vehicle.global_position
 	to_target.y = 0
 	
 	# Advance to next waypoint when close
@@ -67,7 +67,7 @@ func _process_ai_driving(delta: float) -> void:
 	var obstacle_ahead = _check_obstacle_ahead()
 	var stop_line_active = road_network.is_stop_active(current_waypoint_id)
 	
-	var should_stop := (obstacle_ahead["hit"] or stop_line_active)
+	var should_stop: bool = bool(obstacle_ahead["hit"] or stop_line_active)
 	
 	if should_stop:
 		# Apply braking

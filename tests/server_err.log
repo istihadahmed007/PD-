@@ -1,0 +1,49 @@
+SCRIPT ERROR: Cannot call method 'has_multiplayer_peer' on a null value.
+   at: NetworkPlayer._update_ownership (res://multiplayer/network_player.gd:134)
+   GDScript backtrace (most recent call first):
+       [0] _update_ownership (res://multiplayer/network_player.gd:134)
+       [1] @player_peer_id_setter (res://multiplayer/network_player.gd:29)
+       [2] _spawn_network_player (res://multiplayer/multiplayer_world.gd:115)
+       [3] _on_player_joined (res://multiplayer/multiplayer_world.gd:96)
+       [4] c2s_register_nickname (res://multiplayer/network_manager.gd:254)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _spawn_network_player (res://multiplayer/multiplayer_world.gd:117)
+       [1] _on_player_joined (res://multiplayer/multiplayer_world.gd:96)
+       [2] c2s_register_nickname (res://multiplayer/network_manager.gd:254)
+SCRIPT ERROR: Invalid access to property or key 'theme_override_constants' on a base object of type 'HBoxContainer'.
+   at: MultiplayerWorld._rebuild_roster_list (res://multiplayer/multiplayer_world.gd:199)
+   GDScript backtrace (most recent call first):
+       [0] _rebuild_roster_list (res://multiplayer/multiplayer_world.gd:199)
+       [1] _update_hud_display (res://multiplayer/multiplayer_world.gd:181)
+       [2] _on_player_list_updated (res://multiplayer/multiplayer_world.gd:159)
+       [3] c2s_register_nickname (res://multiplayer/network_manager.gd:255)
+SCRIPT ERROR: Cannot call method 'has_multiplayer_peer' on a null value.
+   at: NetworkPlayer._update_ownership (res://multiplayer/network_player.gd:134)
+   GDScript backtrace (most recent call first):
+       [0] _update_ownership (res://multiplayer/network_player.gd:134)
+       [1] @player_peer_id_setter (res://multiplayer/network_player.gd:29)
+       [2] _spawn_network_player (res://multiplayer/multiplayer_world.gd:115)
+       [3] _on_player_joined (res://multiplayer/multiplayer_world.gd:96)
+       [4] c2s_register_nickname (res://multiplayer/network_manager.gd:254)
+ERROR: Condition "!is_inside_tree()" is true. Returning: Transform3D()
+   at: get_global_transform (scene/3d/node_3d.cpp:649)
+   GDScript backtrace (most recent call first):
+       [0] _spawn_network_player (res://multiplayer/multiplayer_world.gd:117)
+       [1] _on_player_joined (res://multiplayer/multiplayer_world.gd:96)
+       [2] c2s_register_nickname (res://multiplayer/network_manager.gd:254)
+SCRIPT ERROR: Invalid access to property or key 'theme_override_constants' on a base object of type 'HBoxContainer'.
+   at: MultiplayerWorld._rebuild_roster_list (res://multiplayer/multiplayer_world.gd:199)
+   GDScript backtrace (most recent call first):
+       [0] _rebuild_roster_list (res://multiplayer/multiplayer_world.gd:199)
+       [1] _update_hud_display (res://multiplayer/multiplayer_world.gd:181)
+       [2] _on_player_list_updated (res://multiplayer/multiplayer_world.gd:159)
+       [3] c2s_register_nickname (res://multiplayer/network_manager.gd:255)
+SCRIPT ERROR: Invalid access to property or key 'theme_override_constants' on a base object of type 'HBoxContainer'.
+   at: MultiplayerWorld._rebuild_roster_list (res://multiplayer/multiplayer_world.gd:199)
+   GDScript backtrace (most recent call first):
+       [0] _rebuild_roster_list (res://multiplayer/multiplayer_world.gd:199)
+       [1] _update_hud_display (res://multiplayer/multiplayer_world.gd:181)
+       [2] _on_player_list_updated (res://multiplayer/multiplayer_world.gd:159)
+       [3] _on_peer_disconnected (res://multiplayer/network_manager.gd:187)

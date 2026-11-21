@@ -66,7 +66,7 @@ func _physics_process(delta: float) -> void:
 	
 	move_and_slide()
 	
-	var current_kmh := abs(forward_speed) * 3.6
+	var current_kmh: float = absf(forward_speed) * 3.6
 	if is_driven:
 		EventBus.vehicle_speed_changed.emit(current_kmh)
 	

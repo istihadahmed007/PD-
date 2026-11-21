@@ -21,6 +21,13 @@ enum MissionType {
 @export_category("Mission Identity")
 @export var mission_id: String = "m01_shadows_and_sparkplugs"
 @export var title: String = "Shadows & Spark Plugs (ছায়া ও চালক)"
+var title_english: String:
+	get:
+		return title.split("(")[0].strip_edges()
+var title_bengali: String:
+	get:
+		var parts = title.split("(")
+		return parts[1].trim_suffix(")").strip_edges() if parts.size() > 1 else ""
 @export var mission_type: MissionType = MissionType.STORY
 @export_multiline var description: String = "Joy assists Kabir Ustad in making an urgent delivery of tuned carburetor parts across the canal before debt collectors arrive."
 @export var prerequisite_mission_id: String = ""
@@ -49,7 +56,7 @@ enum MissionType {
 ##   "dialogue_after": "d_finish",
 ##   "checkpoint": Vector3(x, y, z)
 ## }
-@export var steps: Array[Dictionary] = []
+@export var steps: Array = []
 
 @export_category("Dialogue Sequences")
 ## Dictionary mapping dialogue_id -> Array of lines:

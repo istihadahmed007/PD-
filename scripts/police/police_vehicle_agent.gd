@@ -38,8 +38,8 @@ var lightbar_phase: bool = false
 @onready var lightbar_root: Node3D = get_parent().get_node_or_null("Lightbar")
 @onready var red_strobe: Light3D = get_parent().get_node_or_null("Lightbar/RedLight")
 @onready var blue_strobe: Light3D = get_parent().get_node_or_null("Lightbar/BlueLight")
-@onready var red_mesh: MeshInstance3D = get_parent().get_node_or_null("Lightbar/RedMesh")
-@onready var blue_mesh: MeshInstance3D = get_parent().get_node_or_null("Lightbar/BlueMesh")
+@onready var red_mesh: GeometryInstance3D = get_parent().get_node_or_null("Lightbar/RedMesh")
+@onready var blue_mesh: GeometryInstance3D = get_parent().get_node_or_null("Lightbar/BlueMesh")
 @onready var siren_audio: AudioStreamPlayer3D = get_parent().get_node_or_null("Audio/SirenAudio")
 
 

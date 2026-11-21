@@ -78,7 +78,7 @@ func exit_vehicle() -> void:
 	current_state = GameState.ON_FOOT
 	
 	# Determine dismount spawn location near driver door / side
-	var exit_transform := vehicle.global_transform
+	var exit_transform: Transform3D = vehicle.global_transform
 	if vehicle.has_method("get_safe_exit_global_transform"):
 		exit_transform = vehicle.get_safe_exit_global_transform()
 	elif vehicle.has_node("ExitPoint"):

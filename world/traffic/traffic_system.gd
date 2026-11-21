@@ -120,6 +120,9 @@ func _spawn_traffic_vehicle() -> void:
 	var v_instance: Node = scene.instantiate()
 	v_instance.position = spawn_pos + Vector3(0, 0.4, 0)
 	
+	add_child(v_instance)
+	active_vehicles.append(v_instance)
+	
 	# Face next waypoint
 	var next_wp_id = road_network.get_next_waypoint(chosen_wp_id)
 	var next_pos = road_network.get_waypoint_pos(next_wp_id)
@@ -137,6 +140,3 @@ func _spawn_traffic_vehicle() -> void:
 		agent.current_waypoint_id = chosen_wp_id
 		agent.target_waypoint_id = next_wp_id
 		v_instance.add_child(agent)
-	
-	add_child(v_instance)
-	active_vehicles.append(v_instance)

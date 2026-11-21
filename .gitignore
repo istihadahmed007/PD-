@@ -4,3 +4,5 @@ exports/
 bin/
 
 .env
+builds/
+*.tmp

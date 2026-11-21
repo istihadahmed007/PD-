@@ -8,8 +8,10 @@ class_name MainMenu
 extends Control
 
 const MAIN_SCENE_PATH := "res://scenes/districts/district_01_padma_buriganga.tscn"
+const MULTIPLAYER_MENU_PATH := "res://multiplayer/multiplayer_menu.tscn"
 
 @onready var btn_new_game: Button = %BtnNewGame
+@onready var btn_multiplayer: Button = %BtnMultiplayer
 @onready var btn_continue: Button = %BtnContinue
 @onready var btn_load: Button = %BtnLoad
 @onready var btn_settings: Button = %BtnSettings
@@ -45,6 +47,7 @@ func _ready() -> void:
 
 func _connect_buttons() -> void:
 	if btn_new_game: btn_new_game.pressed.connect(_on_new_game_pressed)
+	if btn_multiplayer: btn_multiplayer.pressed.connect(_on_multiplayer_pressed)
 	if btn_continue: btn_continue.pressed.connect(_on_continue_pressed)
 	if btn_load: btn_load.pressed.connect(_on_load_pressed)
 	if btn_settings: btn_settings.pressed.connect(func(): if settings_modal: settings_modal.open_modal())
@@ -66,6 +69,11 @@ func _update_continue_button() -> void:
 			btn_continue.text = "Continue (%s)" % s1["timestamp"]
 		else:
 			btn_continue.text = "Continue (No Save Found)"
+
+
+func _on_multiplayer_pressed() -> void:
+	AudioManager.stop_music()
+	get_tree().change_scene_to_file(MULTIPLAYER_MENU_PATH)
 
 
 func _on_new_game_pressed() -> void:

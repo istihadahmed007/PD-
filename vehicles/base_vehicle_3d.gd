@@ -114,8 +114,8 @@ func _cache_wheels() -> void:
 func _physics_process(delta: float) -> void:
 	var forward_dir := -global_transform.basis.z
 	var current_velocity := linear_velocity
-	var speed_ms := forward_dir.dot(current_velocity)
-	var speed_kmh := abs(speed_ms) * 3.6
+	var speed_ms: float = forward_dir.dot(current_velocity)
+	var speed_kmh: float = absf(speed_ms) * 3.6
 	
 	if is_driven:
 		_process_driver_input(delta, speed_kmh, speed_ms)

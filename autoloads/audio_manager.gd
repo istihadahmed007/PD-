@@ -81,6 +81,12 @@ func _load_sound_effects() -> void:
 		_snd_land = load("res://audio/player/land_impact.wav")
 
 
+func play_sfx(path: String, volume_offset_db: float = 0.0) -> void:
+	if ResourceLoader.exists(path):
+		var stream := load(path) as AudioStream
+		play_sound_2d(stream, volume_offset_db)
+
+
 func play_footstep(is_wet: bool = false, volume_db: float = -6.0) -> void:
 	var stream: AudioStream = null
 	if is_wet and not _footsteps_puddle.is_empty():
