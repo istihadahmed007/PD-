@@ -52,11 +52,8 @@ sky_material = SubResource("ProceduralSkyMaterial_monsoon")
 background_mode = 2
 sky = SubResource("Sky_district")
 tonemap_mode = 2
-glow_enabled = true
-glow_intensity = 0.4
-ssao_enabled = true
-ssao_radius = 1.2
-ssao_intensity = 2.0
+glow_enabled = false
+ssao_enabled = false
 fog_enabled = true
 fog_light_color = Color(0.72, 0.78, 0.85, 1)
 fog_density = 0.0015
@@ -112,7 +109,8 @@ light_color = Color(1, 0.96, 0.9, 1)
 light_energy = 1.25
 shadow_enabled = true
 shadow_bias = 0.04
-directional_shadow_max_distance = 250.0
+directional_shadow_mode = 0
+directional_shadow_max_distance = 60.0
 
 [node name="WeatherSystem" type="Node3D" parent="." node_paths=PackedStringArray("sun_light", "world_env")]
 script = ExtResource("2_weather")

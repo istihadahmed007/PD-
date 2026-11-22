@@ -55,7 +55,10 @@ var _is_night_lights_active: bool = false
 func _ready() -> void:
 	_setup_weather_audio()
 	set_weather(current_weather)
-	apply_quality_preset(GraphicsQuality.HIGH)
+	if OS.has_feature("web"):
+		apply_quality_preset(GraphicsQuality.LOW)
+	else:
+		apply_quality_preset(GraphicsQuality.HIGH)
 
 
 func _setup_weather_audio() -> void:
@@ -260,12 +263,13 @@ func apply_quality_preset(quality: GraphicsQuality) -> void:
 	
 	match quality:
 		GraphicsQuality.LOW:
-			# Maximum performance on low-end hardware
+			# Maximum performance on web / low-end hardware
 			env.ssao_enabled = false
 			env.ssr_enabled = false
+			env.glow_enabled = false
 			env.volumetric_fog_enabled = false
 			if sun_light:
-				sun_light.directional_shadow_max_distance = 70.0
+				sun_light.directional_shadow_max_distance = 50.0
 				sun_light.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
 		GraphicsQuality.MEDIUM:
 			# Balanced performance
