@@ -1,22 +1,39 @@
 const fs = require('fs');
 const path = require('path');
 
-const rootDir = path.resolve(__dirname, '..');
-const publicDir = path.join(rootDir, 'public');
-const vercelOutputDir = path.join(rootDir, '.vercel', 'output');
+// Search upwards from __dirname to find the repository root containing 'public'
+let current = __dirname;
+let publicDir = null;
+for (let i = 0; i < 6; i++) {
+  const candidate = path.join(current, 'public');
+  if (fs.existsSync(candidate)) {
+    publicDir = candidate;
+    break;
+  }
+  const parent = path.dirname(current);
+  if (parent === current) break;
+  current = parent;
+}
+
+if (!publicDir) {
+  console.error(`[ERROR] Could not locate public/ folder from ${__dirname}`);
+  process.exit(1);
+}
+
+// Output directly to .vercel/output relative to current working directory
+const cwd = process.cwd();
+const vercelOutputDir = path.join(cwd, '.vercel', 'output');
 const staticDir = path.join(vercelOutputDir, 'static');
 
-console.log('[VERCEL BUILD] Starting compilation to Build Output API v3...');
+console.log(`[VERCEL BUILD] Working Directory: ${cwd}`);
+console.log(`[VERCEL BUILD] Resolved Public Dir: ${publicDir}`);
+console.log(`[VERCEL BUILD] Target Output Dir:   ${staticDir}`);
 
-// 1. Ensure clean .vercel/output/static directory exists
 fs.rmSync(vercelOutputDir, { recursive: true, force: true });
 fs.mkdirSync(staticDir, { recursive: true });
 
-// 2. Recursively copy all files and folders from public/ to .vercel/output/static/
-console.log(`[VERCEL BUILD] Copying assets from ${publicDir} to ${staticDir}...`);
 fs.cpSync(publicDir, staticDir, { recursive: true });
 
-// 3. Write Vercel Build Output API v3 config.json
 const config = {
   version: 3,
   routes: [
@@ -63,5 +80,5 @@ fs.writeFileSync(
 );
 
 const copiedFiles = fs.readdirSync(staticDir);
-console.log(`[VERCEL BUILD] Success! Copied ${copiedFiles.length} items to .vercel/output/static`);
+console.log(`[VERCEL BUILD] Success! Copied ${copiedFiles.length} items to ${staticDir}`);
 console.log(`[VERCEL BUILD] Generated config.json for Edge CDN headers and routing.`);
