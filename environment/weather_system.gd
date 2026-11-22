@@ -256,6 +256,7 @@ func apply_quality_preset(quality: GraphicsQuality) -> void:
 		return
 		
 	var env = world_env.environment
+	var has_rd: bool = RenderingServer.get_rendering_device() != null
 	
 	match quality:
 		GraphicsQuality.LOW:
@@ -268,18 +269,19 @@ func apply_quality_preset(quality: GraphicsQuality) -> void:
 				sun_light.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
 		GraphicsQuality.MEDIUM:
 			# Balanced performance
-			env.ssao_enabled = true
+			env.ssao_enabled = has_rd
 			env.ssr_enabled = false
-			env.volumetric_fog_enabled = true
+			env.volumetric_fog_enabled = has_rd
 			if sun_light:
 				sun_light.directional_shadow_max_distance = 120.0
 				sun_light.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 		GraphicsQuality.HIGH:
 			# Full PBR Open-World Visual Standard
-			env.ssao_enabled = true
-			env.ssr_enabled = true
-			env.ssr_max_steps = 32
-			env.volumetric_fog_enabled = true
+			env.ssao_enabled = has_rd
+			env.ssr_enabled = has_rd
+			if has_rd:
+				env.ssr_max_steps = 32
+			env.volumetric_fog_enabled = has_rd
 			if sun_light:
 				sun_light.directional_shadow_max_distance = 160.0
 				sun_light.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
