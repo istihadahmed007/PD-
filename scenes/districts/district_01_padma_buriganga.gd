@@ -69,7 +69,7 @@ func _spawn_story_mission_triggers() -> void:
 	add_child(t2)
 	t2.global_position = Vector3(-38.0, 0.2, 26.0)
 	
-	# 3. SI Mahfuz at Lalbagh Police Thana Porch
+	# 3. SI Mahfuz at Lalbagh Police Thana Porch (Mission 3)
 	var t3 = trigger_scene.instantiate() as MissionTrigger
 	t3.name = "TriggerMahfuz"
 	t3.prompt_speaker = "SI Mahfuz"
@@ -77,6 +77,24 @@ func _spawn_story_mission_triggers() -> void:
 	t3.trigger_color = Color(0.2, 0.45, 1.0, 0.8)
 	add_child(t3)
 	t3.global_position = Vector3(75.0, 0.2, -96.0)
+	
+	# 4. Nila Chowdhury - Mission 4: Hostile Repossession
+	var t4 = trigger_scene.instantiate() as MissionTrigger
+	t4.name = "TriggerNilaMission4"
+	t4.prompt_speaker = "Nila Chowdhury"
+	t4.mission_data = StoryMissions.get_mission_4()
+	t4.trigger_color = Color(0.9, 0.3, 0.7, 0.8)
+	add_child(t4)
+	t4.global_position = Vector3(-35.0, 0.2, 28.0)
+	
+	# 5. SI Mahfuz - Mission 5: The Thana Lockdown
+	var t5 = trigger_scene.instantiate() as MissionTrigger
+	t5.name = "TriggerMahfuzMission5"
+	t5.prompt_speaker = "SI Mahfuz"
+	t5.mission_data = StoryMissions.get_mission_5()
+	t5.trigger_color = Color(1.0, 0.2, 0.2, 0.8)
+	add_child(t5)
+	t5.global_position = Vector3(80.0, 0.2, -98.0)
 
 
 func _spawn_economy_infrastructure() -> void:

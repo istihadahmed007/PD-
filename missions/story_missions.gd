@@ -328,3 +328,176 @@ static func get_mission_3() -> MissionResource:
 	}
 	
 	return m
+
+
+static func get_mission_4() -> MissionResource:
+	var m = MissionResource.new()
+	m.mission_id = "m04_hostile_repossession"
+	m.title = "Hostile Repossession (দখলদার উচ্ছেদ)"
+	m.mission_type = MissionResource.MissionType.CHASE
+	m.description = "Stop Balu Syndicate enforcers from harassing shopkeepers at Sadarghat terminal; intercept their getaway vehicle and recover extorted extortion cash."
+	m.giver_name = "Nila Chowdhury (নিলা চৌধুরী)"
+	m.giver_location = Vector3(-38.0, 0.2, 26.0)
+	m.giver_portrait_path = "res://assets/textures/characters/portrait_nila.png"
+	m.reward_bdt = 3500
+	m.reward_xp = 600
+	
+	m.steps = [
+		{
+			"type": "TALK",
+			"description": "Speak with Nila Chowdhury at the Buriganga Stepped Ghat",
+			"target_position": Vector3(-38.0, 0.2, 26.0),
+			"target_radius": 3.5,
+			"dialogue_before": "d_intro",
+			"checkpoint": Vector3(-38.0, 0.2, 26.0)
+		},
+		{
+			"type": "GOTO",
+			"description": "Rush to Sadarghat Commercial Bazaar where cartel goons are extorting vendors",
+			"target_position": Vector3(-62.0, 0.2, 88.0),
+			"target_radius": 6.0,
+			"checkpoint": Vector3(-62.0, 0.2, 88.0)
+		},
+		{
+			"type": "DEFEND",
+			"description": "Neutralize the Balu Syndicate extortion squad and protect the vendors",
+			"target_position": Vector3(-62.0, 0.2, 88.0),
+			"target_radius": 5.0,
+			"dialogue_after": "d_bazaar_saved",
+			"checkpoint": Vector3(-62.0, 0.2, 88.0)
+		},
+		{
+			"type": "DRIVE",
+			"description": "Intercept the fleeing Syndicate Van heading towards the canal bypass",
+			"target_position": Vector3(-10.0, 0.2, 30.0),
+			"target_radius": 6.0,
+			"time_limit": 140.0,
+			"checkpoint": Vector3(-10.0, 0.2, 30.0)
+		},
+		{
+			"type": "DELIVER",
+			"description": "Return the recovered extortion cash to Nila at the riverside safezone",
+			"target_position": Vector3(-38.0, 0.2, 26.0),
+			"target_radius": 4.0,
+			"dialogue_after": "d_complete",
+			"checkpoint": Vector3(-38.0, 0.2, 26.0)
+		}
+	]
+	
+	m.dialogues = {
+		"d_intro": [
+			{
+				"speaker": "NILA CHOWDHURY (নিলা চৌধুরী)",
+				"bengali": "জয় ভাই, সদরঘাটের ব্যবসায়ীদের শেষ সম্বলটুকুও ওরা কেড়ে নিচ্ছে। চেয়ারম্যানের ভাগ্নে নিজে এসে চাঁদা তুলছে। পুলিশ জেনেও না দেখার ভান করছে!",
+				"english": "Brother Joy, they're taking the merchants' last earnings at Sadarghat. The Chairman's nephew is personally collecting extortion cash. The police look the other way!",
+				"portrait": "res://assets/textures/characters/portrait_nila.png"
+			},
+			{
+				"speaker": "JOY (জয়নাল আবেদিন)",
+				"bengali": "শান্ত হও নিলা। সাধারণ মানুষের ঘামের টাকা এভাবে কোনো লুটেরার পকেটে যেতে দেব না। আমি এখনই যাচ্ছি!",
+				"english": "Calm down, Nila. I won't let the hard-earned money of working people disappear into a criminal's pocket. I'm going right now!",
+				"portrait": "res://assets/textures/characters/portrait_joy.png"
+			}
+		],
+		"d_bazaar_saved": [
+			{
+				"speaker": "SYNDICATE GOON (সিন্ডিকেট গুন্ডা)",
+				"bengali": "ছোকরা বড় বেশি বাড়াবাড়ি করছিস! ভ্যান নিয়ে পালা, চেয়ারম্যানকে গিয়ে সব জানা!",
+				"english": "You're crossing the line, kid! Take the van and run, report this to the Chairman!",
+				"portrait": "res://assets/textures/characters/portrait_tariq.png"
+			}
+		],
+		"d_complete": [
+			{
+				"speaker": "NILA CHOWDHURY (নিলা চৌধুরী)",
+				"bengali": "জয় ভাই, ব্যবসায়ীরা সবাই আপনাকে দোয়া করছে। এই নিন আপনার মেহনতের অংশ ৩৫০০ টাকা। এলাকা আপনার কাছে ঋণী হয়ে রইল।",
+				"english": "Brother Joy, all the vendors are sending you their blessings. Here is your thirty-five hundred Taka share. The neighborhood is forever in your debt.",
+				"portrait": "res://assets/textures/characters/portrait_nila.png"
+			}
+		]
+	}
+	
+	return m
+
+
+static func get_mission_5() -> MissionResource:
+	var m = MissionResource.new()
+	m.mission_id = "m05_thana_lockdown"
+	m.title = "The Thana Lockdown (থানা লকডাউন)"
+	m.mission_type = MissionResource.MissionType.INVESTIGATION
+	m.description = "Infiltrate Lalbagh Police Station records archive, secure the corrupt dredging ledger before it is shredded, and evade a 3-star tactical citywide pursuit."
+	m.giver_name = "SI Mahfuz (এসআই মাহফুজ)"
+	m.giver_location = Vector3(75.0, 0.2, -96.0)
+	m.giver_portrait_path = "res://assets/textures/characters/portrait_mahfuz.png"
+	m.reward_bdt = 6000
+	m.reward_xp = 1000
+	
+	m.steps = [
+		{
+			"type": "TALK",
+			"description": "Meet SI Mahfuz secretly behind Lalbagh Police Station",
+			"target_position": Vector3(75.0, 0.2, -96.0),
+			"target_radius": 3.5,
+			"dialogue_before": "d_intro",
+			"checkpoint": Vector3(75.0, 0.2, -96.0)
+		},
+		{
+			"type": "GOTO",
+			"description": "Enter the Thana records building and recover the Balu Syndicate ledger",
+			"target_position": Vector3(82.0, 0.2, -90.0),
+			"target_radius": 3.0,
+			"dialogue_after": "d_stolen",
+			"checkpoint": Vector3(82.0, 0.2, -90.0)
+		},
+		{
+			"type": "EVADE",
+			"description": "Sirens wailing! Evade the 3-star citywide police pursuit and reach the river safehouse",
+			"target_position": Vector3(-50.0, 0.2, -75.0),
+			"target_radius": 6.0,
+			"time_limit": 180.0,
+			"checkpoint": Vector3(-50.0, 0.2, -75.0)
+		},
+		{
+			"type": "DELIVER",
+			"description": "Deposit the evidence ledger inside the Lalbagh safehouse drop-box",
+			"target_position": Vector3(-50.0, 0.2, -75.0),
+			"target_radius": 3.5,
+			"dialogue_after": "d_complete",
+			"checkpoint": Vector3(-50.0, 0.2, -75.0)
+		}
+	]
+	
+	m.dialogues = {
+		"d_intro": [
+			{
+				"speaker": "SI MAHFUZ (এসআই মাহফুজ)",
+				"bengali": "জয়, এটাই আমাদের শেষ সুযোগ। দুর্নীতিবাজ ওসির ড্রয়ারে পুরো সিন্ডিকেটের লেনদেনের আসল খাতাটা আছে। আজ রাতে কমিশনার বদলি হওয়ার আগেই ওটা গায়েব করে দেবে। তুই ওটা নিয়ে বের হবি, আমি পেছন দিক থেকে কাভার দেব।",
+				"english": "Joy, this is our only chance. The corrupt OC's desk holds the syndicate's master transaction ledger. They plan to destroy it tonight before the new commissioner arrives. You grab it, I'll cover your exit.",
+				"portrait": "res://assets/textures/characters/portrait_mahfuz.png"
+			},
+			{
+				"speaker": "JOY (জয়নাল আবেদিন)",
+				"bengali": "কোনো সমস্যা নেই মাহফুজ ভাই। খাতাটা আমার হাতে এলে পুরো সিন্ডিকেটের ভিত কেঁপে উঠবে।",
+				"english": "No problem, Brother Mahfuz. Once that ledger is in our hands, the syndicate's entire empire will collapse.",
+				"portrait": "res://assets/textures/characters/portrait_joy.png"
+			}
+		],
+		"d_stolen": [
+			{
+				"speaker": "POLICE RADIO (থানা ওয়্যারলেস)",
+				"bengali": "অ্যালার্ট! লালবাগ থানায় অনুপ্রবেশকারী! কন্ট্রোল রুম থেকে বলছি, সব টহল গাড়ি মোড় ব্লক করো! ৩-স্টার এলার্ট জারি!",
+				"english": "Alert! Intruder inside Lalbagh Thana records room! All units set up roadblocks at bridge exits! 3-Star pursuit authorized!",
+				"portrait": "res://assets/textures/characters/portrait_mahfuz.png"
+			}
+		],
+		"d_complete": [
+			{
+				"speaker": "SI MAHFUZ (এসআই মাহফুজ)",
+				"bengali": "সাবাশ জয়! তুই পেরেছিস! এই খাতায় সব হোমড়া-চোমড়াদের নাম আছে। তোর জন্য ৬০০০ টাকা আর সেফহাউসের চাবি রইল। আজ থেকে ঢাকা শহরে তুই এক কিংবদন্তি!",
+				"english": "Brilliant work, Joy! You pulled it off! Every corrupt patron is named in this ledger. Here is six thousand Taka and the safehouse master key. From today, you are a living legend in Dhaka!",
+				"portrait": "res://assets/textures/characters/portrait_mahfuz.png"
+			}
+		]
+	}
+	
+	return m

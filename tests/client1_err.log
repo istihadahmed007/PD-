@@ -1,2 +1,4 @@
+WARNING: Depth of field blur is only available when using the Forward+ or Mobile renderer.
+   at: camera_attributes_set_dof_blur (servers/rendering/storage/camera_attributes_storage.cpp:74)
 ERROR: Condition "!node || !sync->get_replication_config_ptr()" is true. Returning: ERR_UNCONFIGURED
    at: on_replication_start (modules/multiplayer/scene_replication_interface.cpp:251)
