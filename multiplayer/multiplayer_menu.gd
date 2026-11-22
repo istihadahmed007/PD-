@@ -29,6 +29,22 @@ const MAIN_MENU_PATH := "res://ui/menu/main_menu.tscn"
 @onready var roster_container: VBoxContainer = %RosterListVBox
 @onready var panel_roster: PanelContainer = %PanelRoster
 
+# Authentication UI Controls
+@onready var auth_panel: PanelContainer = %AuthPanel
+@onready var badge_auth_mode: Label = %BadgeAuthMode
+@onready var tab_auth_toggle: HBoxContainer = %TabAuthToggle
+@onready var btn_tab_login: Button = %BtnTabLogin
+@onready var btn_tab_register: Button = %BtnTabRegister
+@onready var form_container: VBoxContainer = %FormContainer
+@onready var input_auth_user: LineEdit = %InputAuthUser
+@onready var input_auth_email: LineEdit = %InputAuthEmail
+@onready var input_auth_pass: LineEdit = %InputAuthPass
+@onready var btn_auth_submit: Button = %BtnAuthSubmit
+@onready var btn_auth_logout: Button = %BtnAuthLogout
+@onready var label_auth_feedback: Label = %LabelAuthFeedback
+
+var _is_register_mode: bool = false
+
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -36,6 +52,7 @@ func _ready() -> void:
 	_connect_ui_signals()
 	_connect_network_signals()
 	_update_ui_state()
+	_update_auth_ui()
 
 
 func _init_default_values() -> void:
@@ -59,6 +76,19 @@ func _connect_ui_signals() -> void:
 	if btn_dedicated: btn_dedicated.pressed.connect(_on_dedicated_pressed)
 	if btn_disconnect: btn_disconnect.pressed.connect(_on_disconnect_pressed)
 	if btn_back: btn_back.pressed.connect(_on_back_pressed)
+	
+	# Authentication UI Signals
+	if btn_tab_login: btn_tab_login.pressed.connect(_on_tab_login_pressed)
+	if btn_tab_register: btn_tab_register.pressed.connect(_on_tab_register_pressed)
+	if btn_auth_submit: btn_auth_submit.pressed.connect(_on_auth_submit_pressed)
+	if btn_auth_logout: btn_auth_logout.pressed.connect(_on_auth_logout_pressed)
+	
+	if AuthManager:
+		AuthManager.login_succeeded.connect(_on_login_succeeded)
+		AuthManager.login_failed.connect(_on_login_failed)
+		AuthManager.register_succeeded.connect(_on_register_succeeded)
+		AuthManager.register_failed.connect(_on_register_failed)
+		AuthManager.auth_state_changed.connect(_on_auth_state_changed)
 
 
 func _connect_network_signals() -> void:
@@ -217,3 +247,110 @@ func _rebuild_roster_table() -> void:
 		row.add_child(l_role)
 		
 		roster_container.add_child(row)
+
+
+# ==============================================================================
+# AUTHENTICATION ACTIONS & CALLBACKS
+# ==============================================================================
+func _on_tab_login_pressed() -> void:
+	_is_register_mode = false
+	if input_auth_email: input_auth_email.visible = false
+	if btn_auth_submit: btn_auth_submit.text = "Sign In (লগইন)"
+	if label_auth_feedback:
+		label_auth_feedback.text = "Enter your username/email and password."
+		label_auth_feedback.modulate = Color(0.75, 0.8, 0.85)
+
+
+func _on_tab_register_pressed() -> void:
+	_is_register_mode = true
+	if input_auth_email: input_auth_email.visible = true
+	if btn_auth_submit: btn_auth_submit.text = "Create Account (নিবন্ধন)"
+	if label_auth_feedback:
+		label_auth_feedback.text = "Create a cloud account to save stats, cash, and vehicles."
+		label_auth_feedback.modulate = Color(0.3, 0.85, 0.95)
+
+
+func _on_auth_submit_pressed() -> void:
+	var user_or_login := input_auth_user.text.strip_edges() if input_auth_user else ""
+	var pass_str := input_auth_pass.text if input_auth_pass else ""
+	
+	if label_auth_feedback:
+		label_auth_feedback.text = "Contacting authentication server..."
+		label_auth_feedback.modulate = Color(1.0, 0.85, 0.25)
+	
+	if _is_register_mode:
+		var email_str := input_auth_email.text.strip_edges() if input_auth_email else ""
+		AuthManager.register(user_or_login, email_str, pass_str)
+	else:
+		AuthManager.login(user_or_login, pass_str)
+
+
+func _on_auth_logout_pressed() -> void:
+	AuthManager.logout()
+	_update_auth_ui()
+	if label_auth_feedback:
+		label_auth_feedback.text = "Signed out. You are playing as guest."
+		label_auth_feedback.modulate = Color(0.8, 0.8, 0.85)
+
+
+func _on_login_succeeded(user_data: Dictionary) -> void:
+	_update_auth_ui()
+	if label_auth_feedback:
+		label_auth_feedback.text = "Welcome back, %s! Cloud persistence active." % user_data.get("username", "Player")
+		label_auth_feedback.modulate = Color(0.35, 0.95, 0.45)
+
+
+func _on_login_failed(err_msg: String) -> void:
+	if label_auth_feedback:
+		label_auth_feedback.text = "Login Failed: %s" % err_msg
+		label_auth_feedback.modulate = Color(1.0, 0.35, 0.3)
+
+
+func _on_register_succeeded(user_data: Dictionary) -> void:
+	_update_auth_ui()
+	if label_auth_feedback:
+		label_auth_feedback.text = "Account created! Welcome, %s." % user_data.get("username", "Player")
+		label_auth_feedback.modulate = Color(0.35, 0.95, 0.45)
+
+
+func _on_register_failed(err_msg: String) -> void:
+	if label_auth_feedback:
+		label_auth_feedback.text = "Registration Failed: %s" % err_msg
+		label_auth_feedback.modulate = Color(1.0, 0.35, 0.3)
+
+
+func _on_auth_state_changed(_is_logged_in: bool) -> void:
+	_update_auth_ui()
+
+
+func _update_auth_ui() -> void:
+	if not badge_auth_mode:
+		return
+	
+	if AuthManager and AuthManager.is_authenticated:
+		badge_auth_mode.text = "[AUTHENTICATED]"
+		badge_auth_mode.modulate = Color(0.2, 0.9, 0.4)
+		if tab_auth_toggle: tab_auth_toggle.visible = false
+		if form_container: form_container.visible = false
+		if btn_auth_submit: btn_auth_submit.visible = false
+		if btn_auth_logout: btn_auth_logout.visible = true
+		
+		var uname: String = AuthManager.current_user.get("username", "Joy")
+		var urole: String = AuthManager.current_user.get("role", "player")
+		if input_nickname:
+			input_nickname.text = uname
+		
+		if label_auth_feedback:
+			label_auth_feedback.text = "Active Account: %s (%s)\nCloud sync enabled with bc.vartualtutor.com" % [uname, urole]
+			label_auth_feedback.modulate = Color(0.35, 0.95, 0.45)
+	else:
+		badge_auth_mode.text = "[GUEST MODE]"
+		badge_auth_mode.modulate = Color(1.0, 0.8, 0.3)
+		if tab_auth_toggle: tab_auth_toggle.visible = true
+		if form_container: form_container.visible = true
+		if btn_auth_submit: btn_auth_submit.visible = true
+		if btn_auth_logout: btn_auth_logout.visible = false
+		
+		if label_auth_feedback and not label_auth_feedback.text.begins_with("Login Failed") and not label_auth_feedback.text.begins_with("Registration"):
+			label_auth_feedback.text = "Connect to bc.vartualtutor.com to sync cloud saves."
+			label_auth_feedback.modulate = Color(0.75, 0.8, 0.85, 0.8)

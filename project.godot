@@ -24,6 +24,7 @@ AudioManager="*res://autoloads/audio_manager.gd"
 FullScreenHandler="*res://autoloads/full_screen_handler.gd"
 CameraMode="*res://autoloads/camera_mode.gd"
 NetworkManager="*res://multiplayer/network_manager.gd"
+AuthManager="*res://autoloads/auth_manager.gd"
 
 [display]
 

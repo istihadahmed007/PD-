@@ -14,7 +14,7 @@ const PLAYER_SCENE_PATH: String = "res://multiplayer/network_player.tscn"
 const MENU_SCENE_PATH: String = "res://multiplayer/multiplayer_menu.tscn"
 const NetworkPlayerScript = preload("res://multiplayer/network_player.gd")
 
-@onready var map_instance: Node3D = $NeighbourhoodMap
+@onready var map_instance: Node3D = $District01 if has_node("District01") else get_node_or_null("NeighbourhoodMap")
 @onready var players_container: Node3D = $SpawnedPlayers
 @onready var multiplayer_spawner: MultiplayerSpawner = $MultiplayerSpawner
 

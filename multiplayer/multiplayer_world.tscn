@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dta_multiplayer_world_001"]
 
 [ext_resource type="Script" path="res://multiplayer/multiplayer_world.gd" id="1_world_script"]
-[ext_resource type="PackedScene" path="res://multiplayer/neighbourhood_map.tscn" id="2_map_scene"]
+[ext_resource type="PackedScene" path="res://scenes/districts/district_01_padma_buriganga.tscn" id="2_district_scene"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud_bar"]
 bg_color = Color(0.06, 0.08, 0.12, 0.82)
@@ -33,7 +33,7 @@ content_margin_bottom = 12.0
 [node name="MultiplayerWorld" type="Node3D"]
 script = ExtResource("1_world_script")
 
-[node name="NeighbourhoodMap" parent="." instance=ExtResource("2_map_scene")]
+[node name="District01" parent="." instance=ExtResource("2_district_scene")]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://multiplayer/network_player.tscn")

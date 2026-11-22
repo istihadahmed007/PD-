@@ -229,7 +229,104 @@ text = "Back to Main Menu (প্রধান মেনু)"
 [node name="RightColumn" type="VBoxContainer" parent="CenterArea"]
 custom_minimum_size = Vector2(440, 0)
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 14
+
+[node name="AuthPanel" type="PanelContainer" parent="CenterArea/RightColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBoxAuth" type="VBoxContainer" parent="CenterArea/RightColumn/AuthPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="AuthHeader" type="HBoxContainer" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth"]
+layout_mode = 2
+
+[node name="AuthTitle" type="Label" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth/AuthHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.3, 0.85, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "ONLINE ACCOUNT (ডিটিএ অ্যাকাউন্ট)"
+
+[node name="BadgeAuthMode" type="Label" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth/AuthHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+text = "[GUEST MODE]"
+
+[node name="HSeparatorAuth" type="HSeparator" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth"]
+layout_mode = 2
+
+[node name="TabAuthToggle" type="HBoxContainer" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnTabLogin" type="Button" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth/TabAuthToggle"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Sign In (লগইন)"
+
+[node name="BtnTabRegister" type="Button" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth/TabAuthToggle"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Register (নিবন্ধন)"
+
+[node name="FormContainer" type="VBoxContainer" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="InputAuthUser" type="LineEdit" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth/FormContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Username or Email..."
+
+[node name="InputAuthEmail" type="LineEdit" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth/FormContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+placeholder_text = "Valid Email (for registration)..."
+
+[node name="InputAuthPass" type="LineEdit" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth/FormContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+secret = true
+placeholder_text = "Password (min 6 chars)..."
+
+[node name="AuthActionBox" type="HBoxContainer" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BtnAuthSubmit" type="Button" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth/AuthActionBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_primary")
+text = "Sign In"
+
+[node name="BtnAuthLogout" type="Button" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth/AuthActionBox"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.45, 0.4, 1)
+text = "Sign Out (লগআউট)"
+
+[node name="LabelAuthFeedback" type="Label" parent="CenterArea/RightColumn/AuthPanel/VBoxAuth"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.8, 0.85, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "Connect to bc.vartualtutor.com to sync cloud saves."
+autowrap_mode = 2
 
 [node name="StatusPanel" type="PanelContainer" parent="CenterArea/RightColumn"]
 layout_mode = 2

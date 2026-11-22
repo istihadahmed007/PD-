@@ -45,6 +45,17 @@ enum LocomotionState {
 var is_in_vehicle: bool = false
 var current_vehicle_node: Node = null
 
+# Health & Stamina System
+@export_category("Attributes")
+@export var max_health: float = 100.0
+@export var max_stamina: float = 100.0
+@export var stamina_drain_rate: float = 22.0
+@export var stamina_recovery_rate: float = 16.0
+
+var current_health: float = 100.0
+var current_stamina: float = 100.0
+var sync_health: float = 100.0
+
 # Movement Attributes (Balanced for responsive urban navigation)
 @export_category("Movement Speeds")
 @export var walk_speed: float = 3.2
@@ -141,8 +152,18 @@ func _setup_synchronizer_config() -> void:
 	config.property_set_replication_mode(NodePath(".:sync_vehicle_path"), SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE)
 	config.property_set_spawn(NodePath(".:sync_vehicle_path"), true)
 	
+	# Health Replication (ON_CHANGE)
+	config.add_property(NodePath(".:sync_health"))
+	config.property_set_replication_mode(NodePath(".:sync_health"), SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE)
+	config.property_set_spawn(NodePath(".:sync_health"), true)
+	
 	synchronizer.replication_config = config
 	synchronizer.set_multiplayer_authority(1) # Server is absolute authority
+
+
+func _exit_tree() -> void:
+	if is_local_player and GameManager.active_player == self:
+		GameManager.active_player = null
 
 
 func _update_ownership() -> void:
@@ -161,6 +182,11 @@ func _update_ownership() -> void:
 			if player_camera:
 				player_camera.current = true
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		
+		# Register with central game manager and broadcast HUD initial state
+		GameManager.register_player(self)
+		EventBus.player_health_changed.emit(current_health, max_health)
+		EventBus.player_stamina_changed.emit(current_stamina, max_stamina)
 	else:
 		# Remote players MUST NOT have active cameras or process mouse
 		if camera_rig:
@@ -230,6 +256,15 @@ func _physics_process(delta: float) -> void:
 		var sprint_down := Input.is_action_pressed("sprint") or Input.is_key_pressed(KEY_SHIFT)
 		var jump_pressed := Input.is_action_just_pressed("jump") or Input.is_key_pressed(KEY_SPACE)
 		
+		# Process stamina on local client for responsive HUD display
+		var has_move_input := raw_input.length() > 0.05
+		if sprint_down and has_move_input and current_stamina > 5.0:
+			current_stamina = maxf(0.0, current_stamina - stamina_drain_rate * delta)
+		else:
+			sprint_down = false
+			current_stamina = minf(max_stamina, current_stamina + stamina_recovery_rate * delta)
+		EventBus.player_stamina_changed.emit(current_stamina, max_stamina)
+		
 		# Send input to authoritative server if remote client, or feed directly if host
 		if not multiplayer.is_server():
 			c2s_send_input.rpc_id(1, raw_input, sprint_down, jump_pressed, _cam_yaw)
@@ -265,12 +300,17 @@ func _process_server_movement(delta: float) -> void:
 	# Determine target horizontal speed
 	var target_speed := 0.0
 	if desired_dir.length() > 0.05:
-		if _is_sprinting:
+		if _is_sprinting and current_stamina > 5.0:
 			target_speed = sprint_speed
+			current_stamina = maxf(0.0, current_stamina - stamina_drain_rate * delta)
 		elif desired_dir.length() > 0.6:
 			target_speed = run_speed
+			current_stamina = minf(max_stamina, current_stamina + stamina_recovery_rate * delta)
 		else:
 			target_speed = walk_speed
+			current_stamina = minf(max_stamina, current_stamina + stamina_recovery_rate * delta)
+	else:
+		current_stamina = minf(max_stamina, current_stamina + stamina_recovery_rate * delta)
 	
 	# Acceleration / Deceleration
 	var target_horiz_vel := desired_dir * target_speed
@@ -506,6 +546,21 @@ func _server_process_dismount_vehicle() -> void:
 	s2c_notify_vehicle_dismounted.rpc(exit_pos)
 
 
+func take_damage(amount: float) -> void:
+	if not multiplayer.is_server():
+		return
+	current_health = maxf(0.0, current_health - amount)
+	sync_health = current_health
+	s2c_notify_damage.rpc(current_health, max_health)
+
+
+@rpc("authority", "call_local", "reliable")
+func s2c_notify_damage(health: float, max_h: float) -> void:
+	current_health = health
+	if is_local_player:
+		EventBus.player_health_changed.emit(current_health, max_h)
+
+
 @rpc("authority", "call_local", "reliable")
 func s2c_notify_vehicle_mounted(v_path: NodePath) -> void:
 	is_in_vehicle = true
@@ -518,6 +573,9 @@ func s2c_notify_vehicle_mounted(v_path: NodePath) -> void:
 		character_skin.visible = false
 	
 	if is_local_player and v:
+		GameManager.active_vehicle = v
+		GameManager.current_state = GameManager.GameState.IN_VEHICLE
+		EventBus.vehicle_entered.emit(v, "driver")
 		if v.has_node("VehicleCamera3D"):
 			var vcam = v.get_node("VehicleCamera3D")
 			if "is_active" in vcam:
@@ -539,6 +597,11 @@ func s2c_notify_vehicle_dismounted(exit_pos: Vector3) -> void:
 	global_position = exit_pos
 	
 	if is_local_player:
+		var v = GameManager.active_vehicle
+		GameManager.active_vehicle = null
+		GameManager.current_state = GameManager.GameState.ON_FOOT
+		if v:
+			EventBus.vehicle_exited.emit(v)
 		if camera_rig:
 			camera_rig.visible = true
 			if player_camera:

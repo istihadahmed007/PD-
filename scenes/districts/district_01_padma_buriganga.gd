@@ -13,6 +13,16 @@ var mission_system: MissionSystem = null
 
 
 func _ready() -> void:
+	# In multiplayer session, free standalone single-player character to allow MultiplayerSpawner to manage players
+	if multiplayer and multiplayer.has_multiplayer_peer():
+		if player and is_instance_valid(player):
+			player.queue_free()
+			player = null
+		if DisplayServer.get_name() == "headless":
+			var ui_canvas = get_node_or_null("UI")
+			if ui_canvas:
+				ui_canvas.visible = false
+	
 	await get_tree().create_timer(0.3).timeout
 	
 	# Initialize Master Mission System
