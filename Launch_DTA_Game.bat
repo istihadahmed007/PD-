@@ -15,31 +15,23 @@ set "WINGET_GODOT=%LOCALAPPDATA%\Microsoft\WinGet\Packages\GodotEngine.GodotEngi
 
 if exist "%WINGET_GODOT%" (
     echo [INFO] Found Godot Engine 4. Launching game...
-    start "" "%WINGET_GODOT%" --path "%~dp0."
-    goto done
+    start "" "%WINGET_GODOT%" --rendering-driver opengl3 --path "%~dp0."
+    exit /b 0
 )
 
 where godot >nul 2>nul
 if %ERRORLEVEL% equ 0 (
     echo [INFO] Found Godot in PATH. Launching game...
-    start "" godot --path "%~dp0."
-    goto done
-)
-
-if exist "%~dp0builds\windows\DhakaTheftAuto_Standalone_x64\DhakaTheftAuto.exe" (
-    echo [INFO] Launching standalone executable...
-    start "" "%~dp0builds\windows\DhakaTheftAuto_Standalone_x64\DhakaTheftAuto.exe"
-    goto done
+    start "" godot --rendering-driver opengl3 --path "%~dp0."
+    exit /b 0
 )
 
 if exist "%~dp0builds\windows\DhakaTheftAuto.exe" (
     echo [INFO] Launching standalone executable...
     start "" "%~dp0builds\windows\DhakaTheftAuto.exe"
-    goto done
+    exit /b 0
 )
 
 echo [ERROR] Could not find Godot Engine 4 or game binary.
 pause
-
-:done
-exit /b 0
+exit /b 1

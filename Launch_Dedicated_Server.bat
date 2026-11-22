@@ -1,5 +1,6 @@
 @echo off
-title DTA: Dedicated Multiplayer Server (ঢাকা থেফট অটো)
+chcp 65001 >nul
+title DTA: Dedicated Multiplayer Server
 cd /d "%~dp0"
 
 echo ===============================================================================
@@ -22,21 +23,21 @@ echo Starting Authoritative Dedicated Server...
 echo Press Ctrl+C in this console to gracefully stop the server.
 echo.
 
-set GODOT_EXE=""
+set "GODOT_EXE="
 if exist "%LOCALAPPDATA%\Microsoft\WinGet\Packages\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\Godot_v4.7.2-stable_win64_console.exe" (
-    set GODOT_EXE="%LOCALAPPDATA%\Microsoft\WinGet\Packages\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\Godot_v4.7.2-stable_win64_console.exe"
+    set "GODOT_EXE=%LOCALAPPDATA%\Microsoft\WinGet\Packages\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\Godot_v4.7.2-stable_win64_console.exe"
 ) else (
     where godot >nul 2>nul
     if %ERRORLEVEL% equ 0 (
-        set GODOT_EXE=godot
+        set "GODOT_EXE=godot"
     )
 )
 
-if %GODOT_EXE%=="" (
+if "%GODOT_EXE%"=="" (
     echo [ERROR] Godot 4 executable not automatically found.
     pause
     exit /b 1
 )
 
-%GODOT_EXE% --headless --path "%~dp0." -- --server --port %PORT% --max-players %MAX_PLAYERS%
+"%GODOT_EXE%" --headless --path "%~dp0." -- --server --port %PORT% --max-players %MAX_PLAYERS%
 pause
