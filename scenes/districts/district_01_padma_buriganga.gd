@@ -66,7 +66,7 @@ func _spawn_story_mission_triggers() -> void:
 	t1.mission_data = StoryMissions.get_mission_1()
 	t1.trigger_color = Color(1.0, 0.8, 0.2, 0.8)
 	add_child(t1)
-	t1.global_position = Vector3(-48.0, 0.2, 96.0)
+	t1.global_position = Vector3(-48.0, 0.2, 99.0)
 	
 	# 2. Nila Chowdhury at Riverside Stepped Ghat
 	var t2 = trigger_scene.instantiate() as MissionTrigger

@@ -16,7 +16,7 @@ static func get_mission_1() -> MissionResource:
 	m.mission_type = MissionResource.MissionType.DELIVERY
 	m.description = "Deliver tuned Japanese carburetor parts across the canal bridge to Gaffar Bhai's shop before debt collectors arrive at Kabir Ustad's workshop."
 	m.giver_name = "Kabir Ustad (কবির ওস্তাদ)"
-	m.giver_location = Vector3(-48.0, 0.2, 96.0)
+	m.giver_location = Vector3(-48.0, 0.2, 99.0)
 	m.giver_portrait_path = "res://assets/textures/characters/portrait_kabir.png"
 	m.reward_bdt = 1500
 	m.reward_xp = 350
@@ -25,17 +25,17 @@ static func get_mission_1() -> MissionResource:
 		{
 			"type": "TALK",
 			"description": "Speak with Kabir Ustad inside Bhai Bhai Auto Workshop",
-			"target_position": Vector3(-48.0, 0.2, 96.0),
+			"target_position": Vector3(-48.0, 0.2, 99.0),
 			"target_radius": 3.5,
 			"dialogue_before": "d_intro",
-			"checkpoint": Vector3(-48.0, 0.2, 96.0)
+			"checkpoint": Vector3(-46.0, 0.2, 97.0)
 		},
 		{
 			"type": "DRIVE",
 			"description": "Mount the tuned Green CNG Auto-Rickshaw parked at the apron",
-			"target_position": Vector3(-44.0, 0.45, 92.0),
-			"target_radius": 3.0,
-			"checkpoint": Vector3(-46.0, 0.2, 94.0)
+			"target_position": Vector3(-42.0, 0.45, 95.0),
+			"target_radius": 3.5,
+			"checkpoint": Vector3(-46.0, 0.2, 97.0)
 		},
 		{
 			"type": "DELIVER",
@@ -57,10 +57,10 @@ static func get_mission_1() -> MissionResource:
 		{
 			"type": "GOTO",
 			"description": "Return to Bhai Bhai Auto Workshop and deliver the payment to Kabir Ustad",
-			"target_position": Vector3(-48.0, 0.2, 96.0),
-			"target_radius": 4.0,
+			"target_position": Vector3(-46.0, 0.2, 96.0),
+			"target_radius": 4.5,
 			"dialogue_after": "d_complete",
-			"checkpoint": Vector3(-48.0, 0.2, 96.0)
+			"checkpoint": Vector3(-46.0, 0.2, 96.0)
 		}
 	]
 	

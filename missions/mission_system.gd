@@ -51,6 +51,7 @@ func _ready() -> void:
 	_load_saved_progress()
 	
 	EventBus.player_died.connect(_on_player_died)
+	EventBus.vehicle_entered.connect(_on_vehicle_entered)
 
 
 func _setup_audio_players() -> void:
@@ -291,8 +292,17 @@ func _on_beacon_reached(_body: Node) -> void:
 
 
 func _on_dialogue_finished() -> void:
-	# Optional hook when dialogue ends
-	pass
+	if active_mission:
+		var step = active_mission.get_step(current_step_index)
+		if step.get("type", "") == "TALK" and not step.get("dialogue_before", "").is_empty():
+			advance_objective()
+
+
+func _on_vehicle_entered(_vehicle: Node, _seat: String) -> void:
+	if active_mission:
+		var step = active_mission.get_step(current_step_index)
+		if step.get("type", "") == "DRIVE":
+			advance_objective()
 
 
 func _on_player_died() -> void:

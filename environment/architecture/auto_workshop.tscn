@@ -28,16 +28,9 @@ albedo_color = Color(0.18, 0.35, 0.68, 1)
 metallic = 0.7
 roughness = 0.4
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_workshop"]
-size = Vector3(16, 5.5, 12)
-
 [node name="AutoWorkshop" type="StaticBody3D"]
 collision_layer = 1
 collision_mask = 31
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0)
-shape = SubResource("BoxShape3D_workshop")
 
 [node name="CSGBuilding" type="CSGCombiner3D" parent="."]
 use_collision = true
