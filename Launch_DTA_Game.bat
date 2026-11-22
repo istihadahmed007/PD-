@@ -1,36 +1,45 @@
 @echo off
-title DTA: Dhaka Theft Auto (ঢাকা থেফট অটো) - Launcher
+chcp 65001 >nul
+title DTA: Dhaka Theft Auto Launcher
 cd /d "%~dp0"
 
 echo ===============================================================================
-echo                DTA: DHAKA THEFT AUTO (ঢাকা থেফট অটো)
+echo                DTA: DHAKA THEFT AUTO (BANGLADESH OPEN-WORLD)
 echo           Contemporary Bangladesh Open-World Crime Action Game
 echo ===============================================================================
 echo.
 echo Launching DTA Open-World Game...
 echo.
 
-set GODOT_EXE=""
-if exist "%LOCALAPPDATA%\Microsoft\WinGet\Packages\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\Godot_v4.7.2-stable_win64.exe" (
-    set GODOT_EXE="%LOCALAPPDATA%\Microsoft\WinGet\Packages\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\Godot_v4.7.2-stable_win64.exe"
-) else (
-    where godot >nul 2>nul
-    if %ERRORLEVEL% equ 0 set GODOT_EXE=godot
+set "WINGET_GODOT=%LOCALAPPDATA%\Microsoft\WinGet\Packages\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\Godot_v4.7.2-stable_win64.exe"
+
+if exist "%WINGET_GODOT%" (
+    echo [INFO] Found Godot Engine 4. Launching game...
+    start "" "%WINGET_GODOT%" --path "%~dp0."
+    goto done
 )
 
-if not %GODOT_EXE%=="" (
-    echo [INFO] Starting latest game project with Godot Engine 4...
-    start "" %GODOT_EXE% --path "%~dp0."
-    goto end
+where godot >nul 2>nul
+if %ERRORLEVEL% equ 0 (
+    echo [INFO] Found Godot in PATH. Launching game...
+    start "" godot --path "%~dp0."
+    goto done
+)
+
+if exist "%~dp0builds\windows\DhakaTheftAuto_Standalone_x64\DhakaTheftAuto.exe" (
+    echo [INFO] Launching standalone executable...
+    start "" "%~dp0builds\windows\DhakaTheftAuto_Standalone_x64\DhakaTheftAuto.exe"
+    goto done
 )
 
 if exist "%~dp0builds\windows\DhakaTheftAuto.exe" (
-    echo [INFO] Starting standalone executable...
+    echo [INFO] Launching standalone executable...
     start "" "%~dp0builds\windows\DhakaTheftAuto.exe"
-    goto end
+    goto done
 )
 
-echo [ERROR] Godot 4 executable not found.
+echo [ERROR] Could not find Godot Engine 4 or game binary.
 pause
 
-:end
+:done
+exit /b 0
