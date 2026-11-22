@@ -1,13 +1,9 @@
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 
-[12:27:37] [NET-INFO] Command-line trigger: Starting Headless Dedicated Server on UDP/ENet port 7788...
-[12:27:37] [NET-INFO] Multiplayer peer disconnected and cleaned up.
-[12:27:38] [NET-INFO] DEDICATED SERVER started successfully on UDP/ENet port 7788 (Max peers: 8)
-[12:27:41] [NET-INFO] Remote peer connected: ID 785784418
-[12:27:42] [NET-INFO] [SERVER] Awaiting registration handshake from peer 785784418...
-[12:27:42] [NET-INFO] [SERVER] Registered peer 785784418 as 'Joy_Client'. Total players: 1
-[SERVER] Spawned player character for peer 785784418 ('Joy_Client') at (0.232782, 0.2, -0.38714)
-[12:27:45] [NET-INFO] Remote peer connected: ID 311427770
-[12:27:45] [NET-INFO] [SERVER] Awaiting registration handshake from peer 311427770...
-[12:27:45] [NET-INFO] [SERVER] Registered peer 311427770 as 'Kabir_Client'. Total players: 2
-[SERVER] Spawned player character for peer 311427770 ('Kabir_Client') at (4.873311, 0.2, 1.253573)
+[12:38:56] [NET-INFO] Command-line trigger: Starting Headless Dedicated Server on UDP/ENet port 7788...
+[12:38:56] [NET-INFO] Multiplayer peer disconnected and cleaned up.
+[12:38:56] [NET-INFO] DEDICATED SERVER started successfully on UDP/ENet port 7788 (Max peers: 8)
+[12:39:05] [NET-INFO] Remote peer connected: ID 1931172204
+[12:39:06] [NET-INFO] [SERVER] Awaiting registration handshake from peer 1931172204...
+[12:39:06] [NET-INFO] [SERVER] Registered peer 1931172204 as 'Joy_Client'. Total players: 1
+[SERVER] Spawned player character for peer 1931172204 ('Joy_Client') at (-5.553343, 0.2, -22.31598)

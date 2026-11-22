@@ -1,2 +1,0 @@
-ERROR: Condition "!node || !sync->get_replication_config_ptr()" is true. Returning: ERR_UNCONFIGURED
-   at: on_replication_start (modules/multiplayer/scene_replication_interface.cpp:251)
