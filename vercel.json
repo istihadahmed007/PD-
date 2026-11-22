@@ -1,18 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null,
-  "buildCommand": null,
-  "installCommand": null,
-  "outputDirectory": "public",
+  "buildCommand": "node scripts/build_vercel.js",
+  "outputDirectory": ".vercel/output",
   "cleanUrls": true,
   "rewrites": [
     {
       "source": "/play",
       "destination": "/play/index.html"
-    },
-    {
-      "source": "/",
-      "destination": "/index.html"
     }
   ],
   "headers": [
@@ -38,7 +32,7 @@
       ]
     },
     {
-      "source": "/(.*).wasm",
+      "source": "/(.*\\.wasm)",
       "headers": [
         {
           "key": "Content-Type",
@@ -51,7 +45,7 @@
       ]
     },
     {
-      "source": "/(.*).pck",
+      "source": "/(.*\\.pck)",
       "headers": [
         {
           "key": "Content-Type",

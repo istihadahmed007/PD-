@@ -17,3 +17,4 @@ public/downloads/*.zip
 public/downloads/*.exe
 public/play/*.pck
 public/play/*.wasm
+.vercel/
