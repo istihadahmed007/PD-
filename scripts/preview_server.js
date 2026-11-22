@@ -100,10 +100,10 @@ function createServer() {
       return serveFile(req, res, path.join(PUBLIC_DIR, 'play', 'index.html'));
     }
 
-    if (reqUrl === '/play.html' || reqUrl === '/game' || reqUrl === '/game.html') {
-      const playHtml = path.join(PUBLIC_DIR, 'play.html');
-      if (fs.existsSync(playHtml)) {
-        return serveFile(req, res, playHtml);
+    if (reqUrl === '/game' || reqUrl === '/game.html' || reqUrl === '/play.html') {
+      const gameHtml = path.join(PUBLIC_DIR, 'game.html');
+      if (fs.existsSync(gameHtml)) {
+        return serveFile(req, res, gameHtml);
       }
       return serveFile(req, res, path.join(PUBLIC_DIR, 'play', 'index.html'));
     }

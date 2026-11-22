@@ -3,10 +3,18 @@
   "framework": null,
   "buildCommand": "node scripts/build_vercel.js",
   "outputDirectory": "dist",
-  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/game",
+      "destination": "/game.html"
+    },
+    {
       "source": "/play",
+      "destination": "/play/index.html"
+    },
+    {
+      "source": "/play/",
       "destination": "/play/index.html"
     }
   ],

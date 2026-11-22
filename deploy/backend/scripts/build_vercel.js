@@ -28,17 +28,29 @@ const staticDir = path.join(vercelOutputDir, 'static');
 console.log(`[VERCEL BUILD] Working Directory: ${cwd}`);
 console.log(`[VERCEL BUILD] Source Public Dir: ${publicDir}`);
 console.log(`[VERCEL BUILD] Target Dist Dir:   ${distDir}`);
-console.log(`[VERCEL BUILD] Target Static Dir: ${staticDir}`);
 
 // 1. Prepare dist directory
 fs.rmSync(distDir, { recursive: true, force: true });
 fs.mkdirSync(distDir, { recursive: true });
 fs.cpSync(publicDir, distDir, { recursive: true });
 
+// Ensure PCK and WASM are inside dist/play/ as well as dist/
+const rootPck = path.join(distDir, 'index.pck');
+const rootWasm = path.join(distDir, 'index.wasm');
+const playDir = path.join(distDir, 'play');
+fs.mkdirSync(playDir, { recursive: true });
+
+if (fs.existsSync(rootPck) && !fs.existsSync(path.join(playDir, 'index.pck'))) {
+  fs.copyFileSync(rootPck, path.join(playDir, 'index.pck'));
+}
+if (fs.existsSync(rootWasm) && !fs.existsSync(path.join(playDir, 'index.wasm'))) {
+  fs.copyFileSync(rootWasm, path.join(playDir, 'index.wasm'));
+}
+
 // 2. Prepare .vercel/output directory
 fs.rmSync(vercelOutputDir, { recursive: true, force: true });
 fs.mkdirSync(staticDir, { recursive: true });
-fs.cpSync(publicDir, staticDir, { recursive: true });
+fs.cpSync(distDir, staticDir, { recursive: true });
 
 const config = {
   version: 3,
@@ -70,6 +82,10 @@ const config = {
       continue: true
     },
     {
+      src: '/game',
+      dest: '/game.html'
+    },
+    {
       src: '/play',
       dest: '/play/index.html'
     },
@@ -87,3 +103,4 @@ fs.writeFileSync(
 
 const copiedDist = fs.readdirSync(distDir);
 console.log(`[VERCEL BUILD] Success! Copied ${copiedDist.length} items to dist/ and .vercel/output/static/`);
+console.log(`[VERCEL BUILD] Both /game.html and /play/ have complete PCK + WASM binaries.`);
