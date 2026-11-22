@@ -20,18 +20,24 @@ if (!publicDir) {
   process.exit(1);
 }
 
-// Output directly to .vercel/output relative to current working directory
 const cwd = process.cwd();
+const distDir = path.join(cwd, 'dist');
 const vercelOutputDir = path.join(cwd, '.vercel', 'output');
 const staticDir = path.join(vercelOutputDir, 'static');
 
 console.log(`[VERCEL BUILD] Working Directory: ${cwd}`);
-console.log(`[VERCEL BUILD] Resolved Public Dir: ${publicDir}`);
-console.log(`[VERCEL BUILD] Target Output Dir:   ${staticDir}`);
+console.log(`[VERCEL BUILD] Source Public Dir: ${publicDir}`);
+console.log(`[VERCEL BUILD] Target Dist Dir:   ${distDir}`);
+console.log(`[VERCEL BUILD] Target Static Dir: ${staticDir}`);
 
+// 1. Prepare dist directory
+fs.rmSync(distDir, { recursive: true, force: true });
+fs.mkdirSync(distDir, { recursive: true });
+fs.cpSync(publicDir, distDir, { recursive: true });
+
+// 2. Prepare .vercel/output directory
 fs.rmSync(vercelOutputDir, { recursive: true, force: true });
 fs.mkdirSync(staticDir, { recursive: true });
-
 fs.cpSync(publicDir, staticDir, { recursive: true });
 
 const config = {
@@ -79,6 +85,5 @@ fs.writeFileSync(
   'utf8'
 );
 
-const copiedFiles = fs.readdirSync(staticDir);
-console.log(`[VERCEL BUILD] Success! Copied ${copiedFiles.length} items to ${staticDir}`);
-console.log(`[VERCEL BUILD] Generated config.json for Edge CDN headers and routing.`);
+const copiedDist = fs.readdirSync(distDir);
+console.log(`[VERCEL BUILD] Success! Copied ${copiedDist.length} items to dist/ and .vercel/output/static/`);
