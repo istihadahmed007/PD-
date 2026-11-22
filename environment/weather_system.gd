@@ -265,7 +265,9 @@ func apply_quality_preset(quality: GraphicsQuality) -> void:
 		GraphicsQuality.LOW:
 			# Maximum performance on web / low-end hardware
 			env.ssao_enabled = false
+			env.ssil_enabled = false
 			env.ssr_enabled = false
+			env.sdfgi_enabled = false
 			env.glow_enabled = false
 			env.volumetric_fog_enabled = false
 			if sun_light:
@@ -274,21 +276,30 @@ func apply_quality_preset(quality: GraphicsQuality) -> void:
 		GraphicsQuality.MEDIUM:
 			# Balanced performance
 			env.ssao_enabled = has_rd
+			env.ssil_enabled = false
 			env.ssr_enabled = false
+			env.sdfgi_enabled = false
+			env.glow_enabled = true
 			env.volumetric_fog_enabled = has_rd
 			if sun_light:
 				sun_light.directional_shadow_max_distance = 120.0
 				sun_light.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 		GraphicsQuality.HIGH:
-			# Full PBR Open-World Visual Standard
+			# Full Unreal Engine 5 AAA PBR Standard (Lumen SDFGI, SSAO, SSIL, SSR, Volumetric Fog)
 			env.ssao_enabled = has_rd
+			env.ssil_enabled = has_rd
 			env.ssr_enabled = has_rd
+			env.sdfgi_enabled = has_rd
+			env.glow_enabled = true
 			if has_rd:
-				env.ssr_max_steps = 32
+				env.ssr_max_steps = 64
+				env.sdfgi_cascades = 4
+				env.sdfgi_min_cell_size = 0.2
 			env.volumetric_fog_enabled = has_rd
 			if sun_light:
-				sun_light.directional_shadow_max_distance = 160.0
+				sun_light.directional_shadow_max_distance = 180.0
 				sun_light.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
+				sun_light.directional_shadow_blend_splits = true
 
 
 func _notify_time() -> void:

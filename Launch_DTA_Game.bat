@@ -14,15 +14,15 @@ echo.
 set "WINGET_GODOT=%LOCALAPPDATA%\Microsoft\WinGet\Packages\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\Godot_v4.7.2-stable_win64.exe"
 
 if exist "%WINGET_GODOT%" (
-    echo [INFO] Found Godot Engine 4. Launching game...
-    start "" "%WINGET_GODOT%" --rendering-driver opengl3 --path "%~dp0."
+    echo [INFO] Found Godot Engine 4. Launching game with Forward+ AAA Renderer...
+    start "" "%WINGET_GODOT%" --path "%~dp0."
     exit /b 0
 )
 
 where godot >nul 2>nul
 if %ERRORLEVEL% equ 0 (
-    echo [INFO] Found Godot in PATH. Launching game...
-    start "" godot --rendering-driver opengl3 --path "%~dp0."
+    echo [INFO] Found Godot in PATH. Launching game with Forward+ AAA Renderer...
+    start "" godot --path "%~dp0."
     exit /b 0
 )
 
