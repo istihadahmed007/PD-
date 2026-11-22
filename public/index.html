@@ -1,220 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
-		<title>DTA: Dhaka Theft Auto</title>
-		<style>
-html, body, #canvas {
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GTA BANGLADESH — Official PC Game Portal & Download Center</title>
+  <meta name="description" content="Official game platform for GTA Bangladesh (DTA: Dhaka Theft Auto). Native Windows 64-bit open-world crime action game featuring cycle rickshaws, CNGs, living Dhaka traffic, and dedicated ENet multiplayer.">
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="icon" type="image/png" href="play/index.icon.png">
+</head>
+<body>
 
-body {
-	color: white;
-	background-color: black;
-	overflow: hidden;
-	touch-action: none;
-}
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="brand">
+        <div class="brand-logo">DTA</div>
+        <div class="brand-text">
+          <h1>GTA BANGLADESH</h1>
+          <span>DHAKA THEFT AUTO</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link active">Home</a>
+        <a href="download.html" class="nav-link">Download</a>
+        <a href="online.html" class="nav-link">Online Status</a>
+        <a href="account.html" class="nav-link">Account</a>
+        <a href="support.html" class="nav-link">Support</a>
+        <a href="download.html" class="btn-header-cta">DOWNLOAD PC</a>
+      </nav>
+    </div>
+  </header>
 
-#canvas {
-	display: block;
-}
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-badge">
+        <span>🇧🇩</span> Gold Master Release v1.1.0 • Native Windows PC
+      </div>
+      <h1 class="hero-title">
+        EXPERIENCE BANGLADESH OPEN-WORLD
+        <span class="bengali">ঢাকা থেফট অটো — সমসাময়িক বাংলাদেশ অ্যাকশন গেম</span>
+      </h1>
+      <p class="hero-subtitle">
+        The first AAA-inspired open-world action title set in contemporary Dhaka. Master authentic Cycle Rickshaws, CNG auto-rickshaws, and sedans across living streets, evade 5-star police heat, and play with up to 16 players on dedicated ENet servers.
+      </p>
 
-#canvas:focus {
-	outline: none;
-}
+      <div class="hero-actions">
+        <a href="download.html" class="btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          DOWNLOAD FOR WINDOWS (x64)
+        </a>
+        <a href="account.html" class="btn-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          CREATE ONLINE ACCOUNT
+        </a>
+        <a href="play/index.html" class="btn-secondary" style="border-color: var(--accent-gold); color: var(--accent-gold);" title="Play in browser via WebAssembly">
+          <span>⚡ BROWSER PREVIEW (WASM)</span>
+        </a>
+      </div>
 
-#status, #status-splash, #status-progress {
-	position: absolute;
-	left: 0;
-	right: 0;
-}
+      <!-- Live Server Telemetry Bar -->
+      <div class="telemetry-bar">
+        <div class="telemetry-item">
+          <div class="pulse-indicator"></div>
+          <div>
+            <div class="telemetry-label">Dedicated Server Status</div>
+            <div class="telemetry-val" id="telemetry-status">CONNECTING...</div>
+          </div>
+        </div>
+        <div class="telemetry-item">
+          <div>
+            <div class="telemetry-label">Active Players</div>
+            <div class="telemetry-val" id="telemetry-players">-- / 16</div>
+          </div>
+        </div>
+        <div class="telemetry-item">
+          <div>
+            <div class="telemetry-label">Network Protocol</div>
+            <div class="telemetry-val" id="telemetry-port">7777 (UDP/ENet)</div>
+          </div>
+        </div>
+        <div class="telemetry-item">
+          <div>
+            <div class="telemetry-label">Authoritative Host</div>
+            <div class="telemetry-val">bc.vartualtutor.com</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-#status, #status-splash {
-	top: 0;
-	bottom: 0;
-}
+  <!-- Core Features Section -->
+  <section style="padding: 70px 0;">
+    <div class="container">
+      <h2 class="section-title">BUILT FOR IMMERSIVE REALISM</h2>
+      <p class="section-desc">Engineered with Godot 4.7 Forward+ and Jolt 3D Physics to deliver high-fidelity simulation of contemporary Bangladesh.</p>
 
-#status {
-	background-color: #242424;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	visibility: hidden;
-}
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🛺</div>
+          <h3>Authentic Vehicle Fleet</h3>
+          <p>Drive physically convincing vehicles tuned for Dhaka: human-pedaled Cycle Rickshaws with ringing bells, 2-stroke CNG Auto-Rickshaws, heavy Dhaka city buses, family sedans, and agile motorcycles.</p>
+        </div>
 
-#status-splash {
-	max-height: 100%;
-	max-width: 100%;
-	margin: auto;
-}
+        <div class="feature-card">
+          <div class="feature-icon">🏙️</div>
+          <h3>Detailed Urban Dhaka</h3>
+          <p>Explore District 01: Lalbagh, the Buriganga river embankment, stepped ghats, roadside tea stalls (Mama Tong), Bismillah General Store, Rupali Bank ATMs, and police stations (Thana).</p>
+        </div>
 
-#status-splash.show-image--false {
-	display: none;
-}
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Authoritative Dedicated Multiplayer</h3>
+          <p>Powered by a headless Linux game server over low-latency ENet UDP. Validated server movement, synchronized vehicles, non-teleporting peers, and persistent player accounts.</p>
+        </div>
 
-#status-splash.fullsize--true {
-	height: 100%;
-	width: 100%;
-	object-fit: contain;
-}
+        <div class="feature-card">
+          <div class="feature-icon">👮</div>
+          <h3>5-Star Police Heat & Evasion</h3>
+          <p>Engage in dynamic pursuits with police sedans, spike-strip roadblocks, line-of-sight vision cones, and radar evasion mechanics with authentic Bangladeshi sirens.</p>
+        </div>
 
-#status-splash.use-filter--false {
-	image-rendering: pixelated;
-}
+        <div class="feature-card">
+          <div class="feature-icon">🌧️</div>
+          <h3>Monsoon Weather & Day/Night</h3>
+          <p>Dynamic 24-hour cycle with PBR wet-asphalt shaders, procedural rain ripples, river water physics with Gerstner waves, and Kalbaishakhi thunderstorms with lightning strikes.</p>
+        </div>
 
-#status-progress, #status-notice {
-	display: none;
-}
+        <div class="feature-card">
+          <div class="feature-icon">💾</div>
+          <h3>Persistent Account & Progress</h3>
+          <p>Your money (৳ BDT), bank balance, owned vehicles, custom paint tunes, safehouses, and completed missions are backed by PostgreSQL and accessible across gaming sessions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-#status-progress {
-	bottom: 10%;
-	width: 50%;
-	margin: 0 auto;
-}
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="download.html">Download PC Client</a>
+        <a href="online.html">Server Status</a>
+        <a href="account.html">Account Center</a>
+        <a href="support.html">Bug Reporting & Support</a>
+      </div>
+      <p>© 2026 DTA Open-World Studios. All rights reserved. Target Domain: bc.vartualtutor.com.</p>
+    </div>
+  </footer>
 
-#status-notice {
-	background-color: #5b3943;
-	border-radius: 0.5rem;
-	border: 1px solid #9b3943;
-	color: #e0e0e0;
-	font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
-	line-height: 1.3;
-	margin: 0 2rem;
-	overflow: hidden;
-	padding: 1rem;
-	text-align: center;
-	z-index: 1;
-}
-		</style>
-		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
-<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
-
-	</head>
-	<body>
-		<canvas id="canvas">
-			Your browser does not support the canvas tag.
-		</canvas>
-
-		<noscript>
-			Your browser does not support JavaScript.
-		</noscript>
-
-		<div id="status">
-			<img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="index.png" alt="">
-			<progress id="status-progress"></progress>
-			<div id="status-notice"></div>
-		</div>
-
-		<script src="index.js"></script>
-		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":66405948,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
-const GODOT_THREADS_ENABLED = false;
-const engine = new Engine(GODOT_CONFIG);
-
-(function () {
-	const statusOverlay = document.getElementById('status');
-	const statusProgress = document.getElementById('status-progress');
-	const statusNotice = document.getElementById('status-notice');
-
-	let initializing = true;
-	let statusMode = '';
-
-	function setStatusMode(mode) {
-		if (statusMode === mode || !initializing) {
-			return;
-		}
-		if (mode === 'hidden') {
-			statusOverlay.remove();
-			initializing = false;
-			return;
-		}
-		statusOverlay.style.visibility = 'visible';
-		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
-		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
-		statusMode = mode;
-	}
-
-	function setStatusNotice(text) {
-		while (statusNotice.lastChild) {
-			statusNotice.removeChild(statusNotice.lastChild);
-		}
-		const lines = text.split('\n');
-		lines.forEach((line) => {
-			statusNotice.appendChild(document.createTextNode(line));
-			statusNotice.appendChild(document.createElement('br'));
-		});
-	}
-
-	function displayFailureNotice(err) {
-		console.error(err);
-		if (err instanceof Error) {
-			setStatusNotice(err.message);
-		} else if (typeof err === 'string') {
-			setStatusNotice(err);
-		} else {
-			setStatusNotice('An unknown error occurred.');
-		}
-		setStatusMode('notice');
-		initializing = false;
-	}
-
-	const missing = Engine.getMissingFeatures({
-		threads: GODOT_THREADS_ENABLED,
-	});
-
-	if (missing.length !== 0) {
-		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
-			let serviceWorkerRegistrationPromise;
-			try {
-				serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
-			} catch (err) {
-				serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
-			}
-			// There's a chance that installing the service worker would fix the issue
-			Promise.race([
-				serviceWorkerRegistrationPromise.then((registration) => {
-					if (registration != null) {
-						return Promise.reject(new Error('Service worker already exists.'));
-					}
-					return registration;
-				}).then(() => engine.installServiceWorker()),
-				// For some reason, `getRegistration()` can stall
-				new Promise((resolve) => {
-					setTimeout(() => resolve(), 2000);
-				}),
-			]).then(() => {
-				// Reload if there was no error.
-				window.location.reload();
-			}).catch((err) => {
-				console.error('Error while registering service worker:', err);
-			});
-		} else {
-			// Display the message as usual
-			const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
-			displayFailureNotice(missingMsg + missing.join('\n'));
-		}
-	} else {
-		setStatusMode('progress');
-		engine.startGame({
-			'onProgress': function (current, total) {
-				if (current > 0 && total > 0) {
-					statusProgress.value = current;
-					statusProgress.max = total;
-				} else {
-					statusProgress.removeAttribute('value');
-					statusProgress.removeAttribute('max');
-				}
-			},
-		}).then(() => {
-			setStatusMode('hidden');
-		}, displayFailureNotice);
-	}
-}());
-		</script>
-	</body>
+  <script src="js/portal.js"></script>
+</body>
 </html>
-

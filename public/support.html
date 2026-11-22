@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support & Bug Reporting — GTA Bangladesh</title>
+  <meta name="description" content="Technical support, troubleshooting, and bug reporting center for GTA Bangladesh (DTA: Dhaka Theft Auto).">
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="icon" type="image/png" href="play/index.icon.png">
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="brand">
+        <div class="brand-logo">DTA</div>
+        <div class="brand-text">
+          <h1>GTA BANGLADESH</h1>
+          <span>DHAKA THEFT AUTO</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="download.html" class="nav-link">Download</a>
+        <a href="online.html" class="nav-link">Online Status</a>
+        <a href="account.html" class="nav-link">Account</a>
+        <a href="support.html" class="nav-link active">Support</a>
+        <a href="download.html" class="btn-header-cta">DOWNLOAD PC</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Support Section -->
+  <section style="padding: 60px 0;">
+    <div class="container">
+      <h1 class="section-title" style="text-align: center;">SUPPORT & BUG REPORTING</h1>
+      <p class="section-desc">Encountering an issue or graphical glitch in Old Dhaka? Review our troubleshooting steps below or submit a ticket directly to the dev team.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-bottom: 60px;">
+        
+        <!-- Left Column: Troubleshooting FAQ -->
+        <div>
+          <h2 style="font-size: 22px; margin-bottom: 20px; color: #fff;">FREQUENT TROUBLESHOOTING</h2>
+
+          <div class="feature-card" style="margin-bottom: 16px;">
+            <h4 style="color: var(--accent-green); margin-bottom: 6px;">1. Game Crashes Immediately on Launch</h4>
+            <p style="font-size: 13px; color: var(--text-muted);">Ensure your graphics drivers are up to date and support <strong>Vulkan 1.2+</strong>. If running on older Intel integrated graphics, install the latest Windows DirectX runtime.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 16px;">
+            <h4 style="color: var(--accent-gold); margin-bottom: 6px;">2. Windows Firewall UDP Alert</h4>
+            <p style="font-size: 13px; color: var(--text-muted);">When joining online multiplayer for the first time, Windows Defender may ask to allow Godot through Private Networks. Click <strong>"Allow Access"</strong> so UDP port 7777 packets can communicate with the dedicated server.</p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 16px;">
+            <h4 style="color: var(--accent-blue); margin-bottom: 6px;">3. "SmartScreen Protected Your PC" Notice</h4>
+            <p style="font-size: 13px; color: var(--text-muted);">As this is an indie game build without an expensive EV code-signing certificate, Windows SmartScreen may show an alert. Click <strong>"More Info"</strong> and select <strong>"Run Anyway"</strong>.</p>
+          </div>
+
+          <div class="feature-card">
+            <h4 style="color: #fff; margin-bottom: 6px;">Direct Engineering Contact</h4>
+            <p style="font-size: 13px; color: var(--text-muted);">Server Administrator: <strong>admin@vartualtutor.com</strong><br>Domain Host: <strong>bc.vartualtutor.com</strong></p>
+          </div>
+        </div>
+
+        <!-- Right Column: Bug Report Form -->
+        <div>
+          <div class="portal-card" style="max-width: 100%; margin: 0;">
+            <h2 style="font-size: 22px; margin-bottom: 6px; color: #fff;">SUBMIT A BUG REPORT</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Reports are written directly into our production PostgreSQL audit log for developer investigation.</p>
+
+            <div id="bug-alert" class="alert-box"></div>
+
+            <form id="bug-report-form">
+              <div class="form-group">
+                <label for="bug-name">Player Name / In-Game Callout</label>
+                <input type="text" id="bug-name" class="form-input" placeholder="e.g. Joynal" required>
+              </div>
+
+              <div class="form-group">
+                <label for="bug-email">Email Address (Optional for follow-up)</label>
+                <input type="email" id="bug-email" class="form-input" placeholder="your@email.com">
+              </div>
+
+              <div class="form-group">
+                <label for="bug-category">Issue Category</label>
+                <select id="bug-category" class="form-select">
+                  <option value="GENERAL">General Gameplay</option>
+                  <option value="VEHICLE">Vehicle Physics / Rickshaw / CNG</option>
+                  <option value="NETWORK">Multiplayer Sync / Disconnection</option>
+                  <option value="CRASH">Game Crash / Freeze</option>
+                  <option value="MISSION">Story Mission / Economy / ATM</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="bug-title">Summary / Subject</label>
+                <input type="text" id="bug-title" class="form-input" placeholder="e.g. CNG autorickshaw flipped on bridge curb" required>
+              </div>
+
+              <div class="form-group">
+                <label for="bug-desc">Detailed Description</label>
+                <textarea id="bug-desc" class="form-textarea" rows="4" placeholder="Steps to reproduce, what you observed, and expected behavior..." required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="bug-specs">Your PC Specs (GPU, CPU, Windows version)</label>
+                <input type="text" id="bug-specs" class="form-input" placeholder="e.g. Windows 11, RTX 3060, 16GB RAM">
+              </div>
+
+              <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+                SUBMIT REPORT TO DEV TEAM
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="download.html">Download PC Client</a>
+        <a href="online.html">Server Status</a>
+        <a href="account.html">Account Center</a>
+        <a href="support.html">Bug Reporting & Support</a>
+      </div>
+      <p>© 2026 DTA Open-World Studios. All rights reserved. Target Domain: bc.vartualtutor.com.</p>
+    </div>
+  </footer>
+
+  <script src="js/portal.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player Account & Progression — GTA Bangladesh</title>
+  <meta name="description" content="Manage your GTA Bangladesh (DTA) account, view your player stats, wallet balance, bank savings, owned vehicles, and mission progress.">
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="icon" type="image/png" href="play/index.icon.png">
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="brand">
+        <div class="brand-logo">DTA</div>
+        <div class="brand-text">
+          <h1>GTA BANGLADESH</h1>
+          <span>DHAKA THEFT AUTO</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="download.html" class="nav-link">Download</a>
+        <a href="online.html" class="nav-link">Online Status</a>
+        <a href="account.html" class="nav-link active">Account</a>
+        <a href="support.html" class="nav-link">Support</a>
+        <a href="download.html" class="btn-header-cta">DOWNLOAD PC</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Account Portal Container -->
+  <section style="padding: 60px 0;">
+    <div class="container" style="text-align: center;">
+      <h1 class="section-title">PLAYER ACCOUNT & PROGRESSION</h1>
+      <p class="section-desc">Create your profile or log in to sync your character, cash, bank balance, and owned vehicles across native PC game sessions.</p>
+
+      <!-- Auth Alert Box -->
+      <div id="auth-alert" class="alert-box" style="max-width: 520px; margin: 0 auto 20px;"></div>
+
+      <!-- Auth Forms Section (Shown when logged out) -->
+      <div id="auth-forms-section" class="portal-card">
+        <div class="tabs">
+          <button type="button" class="tab-btn active" data-tab="login" onclick="switchTab('login')">SIGN IN</button>
+          <button type="button" class="tab-btn" data-tab="register" onclick="switchTab('register')">CREATE ACCOUNT</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="box-login">
+          <form id="login-form">
+            <div class="form-group">
+              <label for="login-id">Username or Email</label>
+              <input type="text" id="login-id" class="form-input" placeholder="e.g. Joynal_Abedin" required>
+            </div>
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+              LOG IN TO PROFILE
+            </button>
+          </form>
+        </div>
+
+        <!-- Register Form -->
+        <div id="box-register" style="display: none;">
+          <form id="register-form">
+            <div class="form-group">
+              <label for="reg-username">Player Nickname (3-32 characters)</label>
+              <input type="text" id="reg-username" class="form-input" placeholder="e.g. Joynal_Abedin" minlength="3" maxlength="32" required>
+            </div>
+            <div class="form-group">
+              <label for="reg-email">Email Address</label>
+              <input type="email" id="reg-email" class="form-input" placeholder="player@bangladesh.bd" required>
+            </div>
+            <div class="form-group">
+              <label for="reg-password">Password (Minimum 6 characters)</label>
+              <input type="password" id="reg-password" class="form-input" placeholder="••••••••" minlength="6" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+              CREATE FREE ACCOUNT
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Player Profile Dossier (Shown when logged in) -->
+      <div id="profile-section" class="portal-card" style="display: none; max-width: 680px; text-align: left;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px; margin-bottom: 20px;">
+          <div>
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--accent-green); font-weight: 800; letter-spacing: 1px;">AUTHENTICATED CITIZEN DOSSIER</div>
+            <h2 id="dossier-username" style="font-size: 26px; color: #fff; margin-top: 2px;">Joynal Abedin</h2>
+          </div>
+          <button onclick="logout()" class="btn-secondary" style="font-size: 13px; padding: 6px 14px;">Sign Out</button>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="dossier-grid">
+          <div class="dossier-stat">
+            <div class="dossier-stat-title">Wallet Pocket Cash</div>
+            <div class="dossier-stat-value" id="dossier-wallet">৳ 5,000</div>
+          </div>
+          <div class="dossier-stat">
+            <div class="dossier-stat-title">Rupali Bank / bKash Balance</div>
+            <div class="dossier-stat-value" id="dossier-bank">৳ 25,000</div>
+          </div>
+          <div class="dossier-stat">
+            <div class="dossier-stat-title">Police Wanted Heat</div>
+            <div class="dossier-stat-value" id="dossier-stars">☆☆☆☆☆</div>
+          </div>
+          <div class="dossier-stat">
+            <div class="dossier-stat-title">Current Wardrobe</div>
+            <div class="dossier-stat-value" id="dossier-outfit" style="font-size: 16px; color: #fff;">DHAKA CASUAL</div>
+          </div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 18px; margin-bottom: 24px;">
+          <div style="font-size: 12px; font-weight: bold; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px;">GAMEPLAY SYNC TELEMETRY</div>
+          <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px;">
+            <span style="color: var(--text-muted);">Current Active District:</span>
+            <span id="dossier-region" style="font-weight: bold; color: #fff;">LALBAGH - BURIGANGA</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px;">
+            <span style="color: var(--text-muted);">Owned Garage Fleet:</span>
+            <span id="dossier-vehicles-count" style="font-weight: bold; color: var(--accent-green);">1 Vehicle</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 14px;">
+            <span style="color: var(--text-muted);">Story Mission Progress:</span>
+            <span id="dossier-missions-count" style="font-weight: bold; color: var(--accent-gold);">Chapter 1 Active</span>
+          </div>
+        </div>
+
+        <div style="text-align: center;">
+          <a href="download.html" class="btn-primary" style="display: inline-flex; width: 100%; justify-content: center;">
+            LAUNCH WINDOWS GAME CLIENT
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="download.html">Download PC Client</a>
+        <a href="online.html">Server Status</a>
+        <a href="account.html">Account Center</a>
+        <a href="support.html">Bug Reporting & Support</a>
+      </div>
+      <p>© 2026 DTA Open-World Studios. All rights reserved. Target Domain: bc.vartualtutor.com.</p>
+    </div>
+  </footer>
+
+  <script src="js/portal.js"></script>
+</body>
+</html>

@@ -97,3 +97,20 @@ CREATE TABLE IF NOT EXISTS financial_audit_log (
 );
 
 CREATE INDEX IF NOT EXISTS idx_audit_user_id ON financial_audit_log(user_id);
+
+-- 8. SUPPORT & BUG REPORTS TABLE
+CREATE TABLE IF NOT EXISTS bug_reports (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    player_name VARCHAR(64) NOT NULL,
+    email VARCHAR(255),
+    category VARCHAR(32) NOT NULL DEFAULT 'GENERAL',
+    title VARCHAR(128) NOT NULL,
+    description TEXT NOT NULL,
+    system_specs TEXT,
+    status VARCHAR(24) NOT NULL DEFAULT 'OPEN',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_bug_reports_category ON bug_reports(category);
+CREATE INDEX IF NOT EXISTS idx_bug_reports_status ON bug_reports(status);

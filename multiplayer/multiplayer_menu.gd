@@ -43,9 +43,10 @@ func _init_default_values() -> void:
 		input_nickname.text = NetworkManager.local_nickname
 	if input_ip and input_ip.text.is_empty():
 		if OS.has_feature("web"):
-			input_ip.text = "wss://bc.vartualtutor.com/game"
+			input_ip.text = NetworkManager.DEFAULT_WSS_URL
 		else:
-			input_ip.text = NetworkManager.DEFAULT_IP
+			# In Native Windows PC client: Default to live production server domain
+			input_ip.text = NetworkManager.DEFAULT_PRODUCTION_DOMAIN
 	if input_port and input_port.text.is_empty():
 		input_port.text = str(NetworkManager.DEFAULT_PORT)
 	if spin_max_players:

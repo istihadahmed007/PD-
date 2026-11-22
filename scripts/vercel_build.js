@@ -12,16 +12,7 @@ if (!fs.existsSync(publicDir)) {
   process.exit(1);
 }
 
-// Ensure dist directory exists and sync from public
-if (!fs.existsSync(distDir)) {
-  fs.mkdirSync(distDir, { recursive: true });
-}
+// Ensure dist directory exists and recursively sync from public
+fs.cpSync(publicDir, distDir, { recursive: true });
 
-const files = fs.readdirSync(publicDir);
-for (const file of files) {
-  const src = path.join(publicDir, file);
-  const dest = path.join(distDir, file);
-  fs.copyFileSync(src, dest);
-}
-
-console.log(`[VERCEL BUILD] Successfully synchronized ${files.length} static assets to dist/ and public/`);
+console.log('[VERCEL BUILD] Successfully synchronized all portal assets, css, js, and game files to dist/');

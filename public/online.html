@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Dedicated Server Status — GTA Bangladesh</title>
+  <meta name="description" content="Real-time status monitor for GTA Bangladesh dedicated multiplayer server. Check active player counts, ping, ENet UDP port, and maintenance notices.">
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="icon" type="image/png" href="play/index.icon.png">
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="brand">
+        <div class="brand-logo">DTA</div>
+        <div class="brand-text">
+          <h1>GTA BANGLADESH</h1>
+          <span>DHAKA THEFT AUTO</span>
+        </div>
+      </a>
+      <nav class="main-nav">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="download.html" class="nav-link">Download</a>
+        <a href="online.html" class="nav-link active">Online Status</a>
+        <a href="account.html" class="nav-link">Account</a>
+        <a href="support.html" class="nav-link">Support</a>
+        <a href="download.html" class="btn-header-cta">DOWNLOAD PC</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Live Server Status Section -->
+  <section style="padding: 60px 0;">
+    <div class="container" style="text-align: center;">
+      <h1 class="section-title">AUTHORITATIVE SERVER MONITOR</h1>
+      <p class="section-desc">Live real-time telemetry from our dedicated Linux headless game server instance. Zero simulated or fabricated metrics.</p>
+
+      <!-- Primary Status Card -->
+      <div class="download-hero" style="max-width: 820px; margin: 0 auto 40px; text-align: left;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 16px; margin-bottom: 24px;">
+          <div>
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--accent-green); font-weight: 800; letter-spacing: 1px;">PRODUCTION INSTANCE #01</div>
+            <h2 style="font-size: 26px; color: #fff; margin-top: 2px;">Dhaka Central — Delta Instance</h2>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="pulse-indicator"></div>
+            <span id="telemetry-status" style="font-weight: 800; color: var(--accent-green); font-size: 15px;">CHECKING...</span>
+          </div>
+        </div>
+
+        <!-- Telemetry Metrics Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+          <div class="dossier-stat">
+            <div class="dossier-stat-title">Active Players</div>
+            <div class="dossier-stat-value" id="telemetry-players" style="color: #fff;">-- / 16</div>
+          </div>
+          <div class="dossier-stat">
+            <div class="dossier-stat-title">Ping / HTTP RTT</div>
+            <div class="dossier-stat-value" id="telemetry-ping" style="color: var(--accent-green);">-- ms</div>
+          </div>
+          <div class="dossier-stat">
+            <div class="dossier-stat-title">Simulation Tick Rate</div>
+            <div class="dossier-stat-value" style="color: var(--accent-gold);">60 Hz</div>
+          </div>
+          <div class="dossier-stat">
+            <div class="dossier-stat-title">Multiplayer Protocol</div>
+            <div class="dossier-stat-value" id="telemetry-port" style="font-size: 18px; color: var(--accent-blue);">7777 (UDP)</div>
+          </div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 18px;">
+          <div style="font-size: 12px; font-weight: bold; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px;">SERVER CONNECTION PARAMETERS</div>
+          <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 8px;">To connect from the native Windows game client, launch <code>DhakaTheftAuto.exe</code> and enter:</p>
+          <div style="font-family: monospace; background: #000; padding: 10px 14px; border-radius: 4px; font-size: 13px; color: var(--accent-green); display: flex; justify-content: space-between;">
+            <span>SERVER IP: <strong>bc.vartualtutor.com</strong></span>
+            <span>PORT: <strong>7777</strong> (UDP)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Maintenance & Server Schedule -->
+      <div style="max-width: 820px; margin: 0 auto; text-align: left;">
+        <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 16px;">MAINTENANCE & SERVER SCHEDULE</h2>
+        <div class="feature-card" style="margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h4 style="color: #fff; font-size: 16px;">Scheduled Daily Snapshot Backup</h4>
+            <span style="font-size: 11px; background: rgba(0, 229, 153, 0.1); color: var(--accent-green); padding: 2px 8px; border-radius: 4px; font-weight: bold;">AUTOMATED</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted);">Database state and character inventories are backed up every night at 04:00 AM BST (UTC+6). Zero downtime required.</p>
+        </div>
+
+        <div class="feature-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <h4 style="color: #fff; font-size: 16px;">Server Auto-Restart Policy</h4>
+            <span style="font-size: 11px; background: rgba(0, 180, 216, 0.1); color: var(--accent-blue); padding: 2px 8px; border-radius: 4px; font-weight: bold;">SYSTEMD / DOCKER</span>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted);">The Godot dedicated server runs under an automated Docker container restart policy (<code>restart: always</code>) with instant recovery.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="download.html">Download PC Client</a>
+        <a href="online.html">Server Status</a>
+        <a href="account.html">Account Center</a>
+        <a href="support.html">Bug Reporting & Support</a>
+      </div>
+      <p>© 2026 DTA Open-World Studios. All rights reserved. Target Domain: bc.vartualtutor.com.</p>
+    </div>
+  </footer>
+
+  <script src="js/portal.js"></script>
+</body>
+</html>

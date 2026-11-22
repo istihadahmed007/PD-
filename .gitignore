@@ -13,3 +13,6 @@ dist/
 
 deploy/backend/node_modules/
 builds/web/
+public/downloads/*.zip
+public/downloads/*.exe
+public/play/

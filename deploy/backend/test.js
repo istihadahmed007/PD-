@@ -56,3 +56,30 @@ test('Authoritative Server Payload Validation', (t) => {
     assert.ok(serverPayload.wanted_stars >= 0 && serverPayload.wanted_stars <= 5, 'Wanted stars must be 0-5');
     assert.ok(serverPayload.current_health >= 0.0, 'Health must be positive');
 });
+
+test('Server Heartbeat and Telemetry Validation', (t) => {
+    const heartbeat = {
+        online_players: 4,
+        max_players: 16,
+        port: 7777,
+        region: 'Dhaka, Bangladesh'
+    };
+
+    assert.strictEqual(typeof heartbeat.online_players, 'number');
+    assert.ok(heartbeat.online_players >= 0 && heartbeat.online_players <= heartbeat.max_players);
+    assert.strictEqual(heartbeat.port, 7777);
+});
+
+test('Bug Report Schema Validation', (t) => {
+    const report = {
+        player_name: 'Joy_DTA',
+        email: 'joy@bangladesh.bd',
+        category: 'VEHICLE',
+        title: 'Rickshaw bell sound pitch clipping',
+        description: 'Tapping H rapidly in high traffic caused audio delay.'
+    };
+
+    assert.ok(report.player_name.length >= 2, 'Player name must be valid');
+    assert.ok(['GENERAL', 'VEHICLE', 'CRASH', 'NETWORK', 'MISSION'].includes(report.category));
+    assert.ok(report.title.length > 5, 'Title required');
+});

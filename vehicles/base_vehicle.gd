@@ -41,6 +41,7 @@ func _ready() -> void:
 	current_health = max_health
 	collision_layer = 1 << 2 # Layer 3: Vehicles
 	collision_mask = 1 | (1 << 1) | (1 << 2) | (1 << 4) # Static, Player, Vehicles, Props
+	add_to_group("vehicles")
 	
 	if interactable_area:
 		interactable_area.prompt_text = "Ride " + vehicle_name

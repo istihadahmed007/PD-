@@ -46,6 +46,10 @@ var current_port: int = DEFAULT_PORT
 var current_ip: String = DEFAULT_IP
 var max_players: int = DEFAULT_MAX_PLAYERS
 
+var _heartbeat_timer: Timer = null
+var backend_api_url: String = "http://127.0.0.1:4000"
+var server_api_key: String = "dta_dedicated_server_internal_token_99"
+
 ## Dictionary mapping peer_id (int) -> Dictionary:
 ## {
 ##   "peer_id": int,
@@ -59,8 +63,50 @@ var players: Dictionary = {}
 func _ready() -> void:
 	process_mode = PROCESS_MODE_ALWAYS
 	_bind_multiplayer_signals()
+	_init_heartbeat_system()
 	# Check for command line automation arguments
 	call_deferred("_parse_cmdline_arguments")
+
+
+func _init_heartbeat_system() -> void:
+	if OS.has_environment("BACKEND_API_URL"):
+		backend_api_url = OS.get_environment("BACKEND_API_URL")
+	if OS.has_environment("SERVER_API_KEY"):
+		server_api_key = OS.get_environment("SERVER_API_KEY")
+	
+	_heartbeat_timer = Timer.new()
+	_heartbeat_timer.name = "HeartbeatTimer"
+	_heartbeat_timer.wait_time = 8.0
+	_heartbeat_timer.autostart = true
+	_heartbeat_timer.timeout.connect(_send_heartbeat_to_backend)
+	add_child(_heartbeat_timer)
+
+
+func _send_heartbeat_to_backend() -> void:
+	if current_role != NetworkRole.DEDICATED_SERVER and current_role != NetworkRole.LISTEN_HOST:
+		return
+	
+	var http := HTTPRequest.new()
+	add_child(http)
+	http.request_completed.connect(func(_result, _response_code, _headers, _body):
+		http.queue_free()
+	)
+	
+	var payload := JSON.stringify({
+		"online_players": players.size(),
+		"max_players": max_players,
+		"port": current_port,
+		"region": "Dhaka, Bangladesh"
+	})
+	
+	var headers := [
+		"Content-Type: application/json",
+		"X-Server-Key: %s" % server_api_key
+	]
+	
+	var err := http.request(backend_api_url + "/api/server/heartbeat", headers, HTTPClient.METHOD_POST, payload)
+	if err != OK:
+		http.queue_free()
 
 
 func _bind_multiplayer_signals() -> void:

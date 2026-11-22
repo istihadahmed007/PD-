@@ -55,6 +55,17 @@ function authenticateServerKey(req, res, next) {
     next();
 }
 
+// Server Heartbeat Cache for Real-Time Status Telemetry
+let serverHeartbeat = {
+    online_players: 0,
+    max_players: 16,
+    last_ping: Date.now(),
+    instance_name: "Dhaka Central 01",
+    region: "Dhaka, Bangladesh",
+    protocol: "ENet / UDP",
+    port: 7777
+};
+
 // ==============================================================================
 // HEALTH & MONITORING
 // ==============================================================================
@@ -75,6 +86,78 @@ app.get('/health', async (req, res) => {
             database: 'DISCONNECTED',
             error: err.message
         });
+    }
+});
+
+// Live Authoritative Game Server Telemetry (Public)
+app.get('/api/server/status', async (req, res) => {
+    let dbStatus = "CONNECTED";
+    try {
+        await db.query('SELECT 1');
+    } catch (e) {
+        dbStatus = "DISCONNECTED";
+    }
+
+    // Check if heartbeat is recent (within 30 seconds)
+    const isServerAlive = (Date.now() - serverHeartbeat.last_ping) < 30000;
+
+    res.json({
+        status: isServerAlive ? "ONLINE" : "STANDBY",
+        server_name: serverHeartbeat.instance_name,
+        region: serverHeartbeat.region,
+        protocol: serverHeartbeat.protocol,
+        host: process.env.DOMAIN_NAME || "bc.vartualtutor.com",
+        port: serverHeartbeat.port,
+        online_players: isServerAlive ? serverHeartbeat.online_players : 0,
+        max_players: serverHeartbeat.max_players,
+        tick_rate: 60,
+        game_version: "1.1.0",
+        database: dbStatus,
+        uptime_seconds: Math.floor(process.uptime()),
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Server Heartbeat Ping (From Dedicated Headless Godot Server)
+app.post('/api/server/heartbeat', authenticateServerKey, (req, res) => {
+    const { online_players, max_players, port, region } = req.body;
+    serverHeartbeat.online_players = typeof online_players === 'number' ? online_players : serverHeartbeat.online_players;
+    serverHeartbeat.max_players = typeof max_players === 'number' ? max_players : serverHeartbeat.max_players;
+    serverHeartbeat.port = typeof port === 'number' ? port : serverHeartbeat.port;
+    if (region) serverHeartbeat.region = region;
+    serverHeartbeat.last_ping = Date.now();
+    res.json({ success: true, timestamp: serverHeartbeat.last_ping });
+});
+
+// Bug Reporting Endpoint
+app.post('/api/support/bug-report', async (req, res) => {
+    const { player_name, email, category, title, description, system_specs } = req.body;
+    if (!player_name || !title || !description) {
+        return res.status(400).json({ error: 'Player name, title, and description are required.' });
+    }
+
+    try {
+        const result = await db.query(
+            `INSERT INTO bug_reports (player_name, email, category, title, description, system_specs)
+             VALUES ($1, $2, $3, $4, $5, $6)
+             RETURNING id, created_at`,
+            [
+                player_name.trim().substring(0, 64),
+                email ? email.trim().toLowerCase().substring(0, 255) : null,
+                category || 'GENERAL',
+                title.trim().substring(0, 128),
+                description.trim(),
+                system_specs ? system_specs.trim() : null
+            ]
+        );
+        res.status(201).json({
+            success: true,
+            message: 'Bug report received. Our engineering team has logged the issue.',
+            report_id: result.rows[0].id
+        });
+    } catch (err) {
+        console.error('[BUG-REPORT-ERROR]', err);
+        res.status(500).json({ error: 'Failed to record bug report.' });
     }
 });
 

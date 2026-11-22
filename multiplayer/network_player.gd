@@ -38,6 +38,12 @@ enum LocomotionState {
 @export var sync_rotation_y: float = 0.0
 @export var sync_velocity: Vector3 = Vector3.ZERO
 @export var sync_locomotion_state: int = 0
+@export var sync_in_vehicle: bool = false
+@export var sync_vehicle_path: String = ""
+
+# Vehicle Driving State
+var is_in_vehicle: bool = false
+var current_vehicle_node: Node = null
 
 # Movement Attributes (Balanced for responsive urban navigation)
 @export_category("Movement Speeds")
@@ -126,6 +132,15 @@ func _setup_synchronizer_config() -> void:
 	config.property_set_replication_mode(NodePath(".:player_peer_id"), SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE)
 	config.property_set_spawn(NodePath(".:player_peer_id"), true)
 	
+	# Vehicle Mounting Replication (ON_CHANGE)
+	config.add_property(NodePath(".:sync_in_vehicle"))
+	config.property_set_replication_mode(NodePath(".:sync_in_vehicle"), SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE)
+	config.property_set_spawn(NodePath(".:sync_in_vehicle"), true)
+	
+	config.add_property(NodePath(".:sync_vehicle_path"))
+	config.property_set_replication_mode(NodePath(".:sync_vehicle_path"), SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE)
+	config.property_set_spawn(NodePath(".:sync_vehicle_path"), true)
+	
 	synchronizer.replication_config = config
 	synchronizer.set_multiplayer_authority(1) # Server is absolute authority
 
@@ -187,6 +202,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		else:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+	# Interact key (E) to Enter/Exit Vehicles
+	if event.is_action_pressed("interact") or (event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_E):
+		_handle_vehicle_interaction()
 
 
 # ==============================================================================
@@ -221,7 +240,11 @@ func _physics_process(delta: float) -> void:
 	# B) SERVER: Run authoritative movement physics with move_and_slide()
 	# --------------------------------------------------------------------------
 	if multiplayer.is_server():
-		_process_server_movement(delta)
+		if is_in_vehicle and current_vehicle_node and is_instance_valid(current_vehicle_node):
+			global_position = current_vehicle_node.global_position
+			velocity = Vector3.ZERO
+		else:
+			_process_server_movement(delta)
 		
 		# Push authoritative state to synchronized properties
 		sync_position = global_position
@@ -301,6 +324,17 @@ func _process(delta: float) -> void:
 	
 	# Non-server clients interpolate positions from synchronized server state
 	if not multiplayer.is_server():
+		# Reconcile character skin visibility if mounting state changed over network
+		if character_skin:
+			if sync_in_vehicle and character_skin.visible:
+				character_skin.visible = false
+				if collision_shape:
+					collision_shape.disabled = true
+			elif not sync_in_vehicle and not character_skin.visible:
+				character_skin.visible = true
+				if collision_shape:
+					collision_shape.disabled = false
+		
 		if is_local_player:
 			# Local client smooth reconciliation towards authoritative server position
 			var dist := global_position.distance_to(sync_position)
@@ -379,3 +413,133 @@ func _receive_input_internal(input_vec: Vector2, sprint: bool, jump: bool, cam_y
 	if jump:
 		_jump_requested = true
 	_input_cam_yaw = cam_yaw
+
+
+# ==============================================================================
+# MULTIPLAYER VEHICLE MOUNTING & SYNCHRONIZATION
+# ==============================================================================
+func _handle_vehicle_interaction() -> void:
+	if is_in_vehicle:
+		if not multiplayer.is_server():
+			c2s_request_dismount_vehicle.rpc_id(1)
+		else:
+			_server_process_dismount_vehicle()
+	else:
+		var nearest := _find_nearest_vehicle(4.2)
+		if nearest:
+			if not multiplayer.is_server():
+				c2s_request_mount_vehicle.rpc_id(1, nearest.get_path())
+			else:
+				_server_process_mount_vehicle(nearest.get_path())
+
+
+func _find_nearest_vehicle(max_dist: float) -> Node:
+	var vehicles := get_tree().get_nodes_in_group("vehicles")
+	var nearest_node: Node = null
+	var min_dist := max_dist
+	for v in vehicles:
+		if v is Node3D:
+			var d := global_position.distance_to(v.global_position)
+			if d < min_dist:
+				min_dist = d
+				nearest_node = v
+	return nearest_node
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func c2s_request_mount_vehicle(v_path: NodePath) -> void:
+	if not multiplayer.is_server() or multiplayer.get_remote_sender_id() != player_peer_id:
+		return
+	_server_process_mount_vehicle(v_path)
+
+
+func _server_process_mount_vehicle(v_path: NodePath) -> void:
+	if is_in_vehicle:
+		return
+	var v := get_node_or_null(v_path)
+	if not v or not (v is Node3D):
+		return
+	if global_position.distance_to(v.global_position) > 6.0:
+		return
+	if v.get("is_driven") == true:
+		return
+	
+	is_in_vehicle = true
+	sync_in_vehicle = true
+	sync_vehicle_path = str(v_path)
+	current_vehicle_node = v
+	if v.has_method("mount_driver"):
+		v.mount_driver(self)
+	
+	s2c_notify_vehicle_mounted.rpc(v_path)
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func c2s_request_dismount_vehicle() -> void:
+	if not multiplayer.is_server() or multiplayer.get_remote_sender_id() != player_peer_id:
+		return
+	_server_process_dismount_vehicle()
+
+
+func _server_process_dismount_vehicle() -> void:
+	if not is_in_vehicle:
+		return
+	var v := current_vehicle_node
+	var exit_pos := global_position + Vector3(-2.0, 0.4, 0)
+	if v and v.has_method("get_safe_exit_global_transform"):
+		exit_pos = v.get_safe_exit_global_transform().origin
+	elif v and v.has_node("ExitPoint"):
+		exit_pos = v.get_node("ExitPoint").global_position
+	elif v and v.has_node("ExitPointLeft"):
+		exit_pos = v.get_node("ExitPointLeft").global_position
+	
+	is_in_vehicle = false
+	sync_in_vehicle = false
+	sync_vehicle_path = ""
+	if v and v.has_method("dismount_driver"):
+		v.dismount_driver()
+	current_vehicle_node = null
+	
+	global_position = exit_pos
+	sync_position = exit_pos
+	
+	s2c_notify_vehicle_dismounted.rpc(exit_pos)
+
+
+@rpc("authority", "call_local", "reliable")
+func s2c_notify_vehicle_mounted(v_path: NodePath) -> void:
+	is_in_vehicle = true
+	var v := get_node_or_null(v_path)
+	current_vehicle_node = v
+	
+	if collision_shape:
+		collision_shape.disabled = true
+	if character_skin:
+		character_skin.visible = false
+	
+	if is_local_player and v:
+		if v.has_node("VehicleCamera3D"):
+			var vcam = v.get_node("VehicleCamera3D")
+			if "is_active" in vcam:
+				vcam.is_active = true
+		if camera_rig:
+			camera_rig.visible = false
+
+
+@rpc("authority", "call_local", "reliable")
+func s2c_notify_vehicle_dismounted(exit_pos: Vector3) -> void:
+	is_in_vehicle = false
+	current_vehicle_node = null
+	
+	if collision_shape:
+		collision_shape.disabled = false
+	if character_skin:
+		character_skin.visible = true
+	
+	global_position = exit_pos
+	
+	if is_local_player:
+		if camera_rig:
+			camera_rig.visible = true
+			if player_camera:
+				player_camera.current = true
