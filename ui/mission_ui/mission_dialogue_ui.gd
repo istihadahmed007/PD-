@@ -36,6 +36,7 @@ func play_dialogue_sequence(lines: Array) -> void:
 	current_line_index = 0
 	is_active = true
 	visible = true
+	EventBus.mission_dialogue_opened.emit()
 	
 	_show_current_line()
 
@@ -58,7 +59,7 @@ func _show_current_line() -> void:
 	if english_label:
 		english_label.text = english
 	if prompt_hint:
-		prompt_hint.text = "[ Space / E ] Continue... (%d/%d)" % [current_line_index + 1, active_lines.size()]
+		prompt_hint.text = "[ Click / Space / E ] Continue... (%d/%d)" % [current_line_index + 1, active_lines.size()]
 	
 	if portrait_texture and not portrait_path.is_empty() and ResourceLoader.exists(portrait_path):
 		portrait_texture.texture = load(portrait_path)
@@ -89,6 +90,14 @@ func _close_dialogue() -> void:
 	dialogue_finished.emit()
 
 
+func _gui_input(event: InputEvent) -> void:
+	if not is_active:
+		return
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		advance_dialogue()
+		accept_event()
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_active:
 		return
@@ -97,6 +106,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.keycode == KEY_SPACE or event.keycode == KEY_E or event.keycode == KEY_ENTER:
 			advance_dialogue()
 			get_viewport().set_input_as_handled()
+	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		advance_dialogue()
+		get_viewport().set_input_as_handled()
 
 
 func _on_external_line_triggered(speaker: String, bn: String, en: String, portrait: String) -> void:

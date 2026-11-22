@@ -11,6 +11,7 @@ signal resumed()
 
 @onready var menu_root: Control = $MenuRoot
 @onready var btn_resume: Button = $MenuRoot/Panel/VBox/BtnResume
+@onready var btn_restart_mission: Button = get_node_or_null("MenuRoot/Panel/VBox/BtnRestartMission")
 @onready var btn_save: Button = $MenuRoot/Panel/VBox/BtnSave
 @onready var btn_load: Button = $MenuRoot/Panel/VBox/BtnLoad
 @onready var btn_missions: Button = $MenuRoot/Panel/VBox/BtnMissions
@@ -43,11 +44,15 @@ func _ready() -> void:
 	if slots_panel: slots_panel.hide()
 	if status_toast: status_toast.text = ""
 	
+	if OS.has_feature("web") and btn_quit:
+		btn_quit.visible = false
+	
 	_connect_buttons()
 
 
 func _connect_buttons() -> void:
 	if btn_resume: btn_resume.pressed.connect(resume_game)
+	if btn_restart_mission: btn_restart_mission.pressed.connect(_on_restart_checkpoint_pressed)
 	if btn_save: btn_save.pressed.connect(func(): _open_slots_panel(true))
 	if btn_load: btn_load.pressed.connect(func(): _open_slots_panel(false))
 	if btn_missions: btn_missions.pressed.connect(_open_mission_log)
@@ -55,6 +60,17 @@ func _connect_buttons() -> void:
 	if btn_settings: btn_settings.pressed.connect(_open_settings)
 	if btn_main_menu: btn_main_menu.pressed.connect(_on_quit_to_main_menu)
 	if btn_quit: btn_quit.pressed.connect(func(): get_tree().quit())
+
+
+func _on_restart_checkpoint_pressed() -> void:
+	var ms = get_tree().get_first_node_in_group("mission_system")
+	if ms and ms.has_method("retry_mission") and ms.active_mission:
+		ms.retry_mission()
+		_show_status("Restarted from last checkpoint!")
+		await get_tree().create_timer(0.4).timeout
+		resume_game()
+	else:
+		_show_status("No active mission checkpoint.")
 	
 	if btn_slot_1: btn_slot_1.pressed.connect(func(): _execute_slot_action(1))
 	if btn_slot_2: btn_slot_2.pressed.connect(func(): _execute_slot_action(2))

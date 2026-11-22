@@ -75,6 +75,12 @@ custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 text = "Resume Game [ESC]"
 
+[node name="BtnRestartMission" type="Button" parent="MenuRoot/Panel/VBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+text = "Restart Objective / Checkpoint"
+
 [node name="BtnSave" type="Button" parent="MenuRoot/Panel/VBox"]
 custom_minimum_size = Vector2(0, 36)
 layout_mode = 2

@@ -17,6 +17,11 @@ extends Control
 @onready var gear_label: Label = %GearLabel if has_node("%GearLabel") else null
 @onready var mission_toast: PanelContainer = %MissionToast
 @onready var mission_text: Label = %MissionText
+@onready var objective_panel: PanelContainer = %ObjectivePanel if has_node("%ObjectivePanel") else null
+@onready var objective_title: Label = %ObjectiveTitle if has_node("%ObjectiveTitle") else null
+@onready var objective_desc: Label = %ObjectiveDesc if has_node("%ObjectiveDesc") else null
+@onready var objective_distance: Label = %ObjectiveDistance if has_node("%ObjectiveDistance") else null
+@onready var controls_hint_label: Label = %ControlsHintLabel if has_node("%ControlsHintLabel") else null
 
 
 func _ready() -> void:
@@ -93,16 +98,33 @@ func _on_stamina_changed(current: float, max_val: float) -> void:
 		stamina_bar.value = current
 
 
+func _process(_delta: float) -> void:
+	if not objective_panel or not objective_panel.visible:
+		return
+	var ms = get_tree().get_first_node_in_group("mission_system")
+	if ms and ms.get("active_beacon") and ms.active_beacon and ms.active_beacon.is_active:
+		if is_instance_valid(GameManager.active_player):
+			var dist = GameManager.active_player.global_position.distance_to(ms.active_beacon.global_position)
+			if objective_distance:
+				objective_distance.text = "Beacon Distance: %d meters" % int(round(dist))
+	elif objective_distance:
+		objective_distance.text = "Target in Range"
+
+
 func _on_vehicle_entered(vehicle: Node, _seat: String) -> void:
 	if vehicle_hud:
 		vehicle_hud.visible = true
 		if vehicle_name_label and vehicle.get("vehicle_name"):
 			vehicle_name_label.text = str(vehicle.vehicle_name).to_upper()
+	if controls_hint_label:
+		controls_hint_label.text = "[W S] Accelerate/Brake  •  [A D] Steer  •  [Space] Handbrake  •  [E] Dismount  •  [H] Horn"
 
 
 func _on_vehicle_exited(_vehicle: Node) -> void:
 	if vehicle_hud:
 		vehicle_hud.visible = false
+	if controls_hint_label:
+		controls_hint_label.text = "[W A S D] Move  •  [Shift] Sprint  •  [Space] Jump  •  [E] Interact  •  [R-Click] Aim  •  [Esc] Menu"
 
 
 func _on_vehicle_speed_changed(kmh: float) -> void:
@@ -117,14 +139,26 @@ func _on_vehicle_gear_changed(gear_name: String, _rpm: float) -> void:
 
 func _on_mission_started(_id: String, title: String) -> void:
 	_show_mission_toast("MISSION STARTED: " + title)
+	if objective_panel:
+		objective_panel.visible = true
+	if objective_title:
+		objective_title.text = title
 
 
 func _on_mission_objective_updated(_step: int, desc: String) -> void:
 	_show_mission_toast("OBJECTIVE: " + desc)
+	if objective_panel:
+		objective_panel.visible = true
+	if objective_desc:
+		objective_desc.text = desc
 
 
 func _on_mission_completed(_id: String, reward: int) -> void:
 	_show_mission_toast("MISSION COMPLETED! Reward: " + EconomySystem.format_bdt(reward))
+	if objective_desc:
+		objective_desc.text = "Mission Completed! Reward: +%s" % EconomySystem.format_bdt(reward)
+	if objective_distance:
+		objective_distance.text = "Completed"
 
 
 func _show_mission_toast(msg: String) -> void:

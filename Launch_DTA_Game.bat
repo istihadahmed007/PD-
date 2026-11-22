@@ -26,6 +26,12 @@ if %ERRORLEVEL% equ 0 (
     exit /b 0
 )
 
+if exist "%~dp0builds\windows\DhakaTheftAuto_Standalone_x64\DhakaTheftAuto.exe" (
+    echo [INFO] Launching standalone executable...
+    start "" "%~dp0builds\windows\DhakaTheftAuto_Standalone_x64\DhakaTheftAuto.exe"
+    exit /b 0
+)
+
 if exist "%~dp0builds\windows\DhakaTheftAuto.exe" (
     echo [INFO] Launching standalone executable...
     start "" "%~dp0builds\windows\DhakaTheftAuto.exe"

@@ -150,7 +150,7 @@ function createServer() {
     const playUrl = `http://localhost:${PORT}/play/`;
 
     console.log('===============================================================================');
-    console.log(`  GTA BANGLADESH (DTA) — LOCAL WEB PREVIEW SERVER RUNNING`);
+    console.log(`  DTA: DHAKA THEFT AUTO (ঢাকা থেফট অটো) — LOCAL WEB PREVIEW SERVER RUNNING`);
     console.log('===============================================================================');
     console.log(`  * Web Portal:      ${portalUrl}`);
     console.log(`  * Web Game Client: ${playUrl}`);

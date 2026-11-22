@@ -15,6 +15,7 @@ const MULTIPLAYER_MENU_PATH := "res://multiplayer/multiplayer_menu.tscn"
 @onready var btn_continue: Button = %BtnContinue
 @onready var btn_load: Button = %BtnLoad
 @onready var btn_settings: Button = %BtnSettings
+@onready var btn_controls: Button = %BtnControls
 @onready var btn_credits: Button = %BtnCredits
 @onready var btn_exit: Button = %BtnExit
 
@@ -29,6 +30,9 @@ const MULTIPLAYER_MENU_PATH := "res://multiplayer/multiplayer_menu.tscn"
 @onready var credits_panel: Panel = %CreditsPanel
 @onready var btn_credits_close: Button = %BtnCreditsClose
 
+@onready var controls_panel: Panel = %ControlsPanel
+@onready var btn_controls_close: Button = %BtnControlsClose
+
 @onready var settings_modal: SettingsModal = %SettingsModal
 
 
@@ -36,7 +40,11 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if slots_panel: slots_panel.hide()
 	if credits_panel: credits_panel.hide()
+	if controls_panel: controls_panel.hide()
 	if settings_modal: settings_modal.hide()
+	
+	if OS.has_feature("web") and btn_exit:
+		btn_exit.visible = false
 	
 	_connect_buttons()
 	_update_continue_button()
@@ -51,6 +59,7 @@ func _connect_buttons() -> void:
 	if btn_continue: btn_continue.pressed.connect(_on_continue_pressed)
 	if btn_load: btn_load.pressed.connect(_on_load_pressed)
 	if btn_settings: btn_settings.pressed.connect(func(): if settings_modal: settings_modal.open_modal())
+	if btn_controls: btn_controls.pressed.connect(func(): if controls_panel: controls_panel.show())
 	if btn_credits: btn_credits.pressed.connect(func(): if credits_panel: credits_panel.show())
 	if btn_exit: btn_exit.pressed.connect(func(): get_tree().quit())
 	
@@ -59,6 +68,7 @@ func _connect_buttons() -> void:
 	if btn_slot_3: btn_slot_3.pressed.connect(func(): _load_slot(3))
 	if btn_slots_back: btn_slots_back.pressed.connect(func(): slots_panel.hide())
 	if btn_credits_close: btn_credits_close.pressed.connect(func(): credits_panel.hide())
+	if btn_controls_close: btn_controls_close.pressed.connect(func(): controls_panel.hide())
 
 
 func _update_continue_button() -> void:

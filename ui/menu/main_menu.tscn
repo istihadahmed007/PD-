@@ -100,6 +100,13 @@ custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 text = "Settings & Graphics..."
 
+[node name="BtnControls" type="Button" parent="MenuButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+text = "Controls & How to Play (নিয়ন্ত্রণ)"
+
 [node name="BtnCredits" type="Button" parent="MenuButtons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 40)
@@ -255,6 +262,83 @@ custom_minimum_size = Vector2(120, 36)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Close"
+
+[node name="ControlsPanel" type="Panel" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -240.0
+offset_right = 340.0
+offset_bottom = 240.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="ControlsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 25.0
+offset_top = 20.0
+offset_right = -25.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="ControlsTitle" type="Label" parent="ControlsPanel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 20
+text = "GAME CONTROLS & HOW TO PLAY (নিয়ন্ত্রণ)"
+horizontal_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="ControlsPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ControlsText" type="Label" parent="ControlsPanel/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "ON-FOOT LOCOMOTION & COMBAT:
+• [ W, A, S, D ] — Walk / Jog in all 8 directions
+• [ Left Shift ] — Sprint (Hold to sprint at 12.5 m/s, drains stamina)
+• [ Spacebar ] — Jump / Vault (Buffered with coyote time)
+• [ E ] — Interact / Speak to NPCs / Enter Vehicle / Buy Food
+• [ C ] — Crouch / Sneak
+• [ Right Mouse Button ] — Hold for Over-the-Shoulder Aim Mode
+• [ Left Mouse Button ] — Attack / Fire Weapon / Advance Dialogue
+• [ Tab ] — Swap Weapon / Grenade
+
+VEHICLE CONTROLS (Rickshaw, CNG, Sedan, Bus):
+• [ W / S ] — Throttle Forward / Reverse & Brake
+• [ A / D ] — Steer Left / Steer Right
+• [ Spacebar ] — Handbrake / Drift Slide
+• [ E ] — Dismount / Exit Vehicle
+• [ H ] — Vehicle Horn (Dhaka City Horn)
+• [ L ] — Toggle Headlights
+
+NAVIGATION & SHORTCUTS:
+• [ ESC ] — In-Game Pause Menu / Resume / Save Game
+• [ J ] — Story Mission Log & Active Objectives
+• [ M ] — Fullscreen World Navigation Map
+• [ F3 ] — Toggle Performance Profiler Overlay"
+autowrap_mode = 3
+
+[node name="BtnControlsClose" type="Button" parent="ControlsPanel/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 36)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Close (বন্ধ করুন)"
 
 [node name="SettingsModal" parent="." instance=ExtResource("2_settings")]
 unique_name_in_owner = true

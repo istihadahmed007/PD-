@@ -83,6 +83,7 @@ var current_stamina: float = 100.0
 var is_sprinting: bool = false
 var is_crouching: bool = false
 var is_hard_landing_recovering: bool = false
+var _is_dialogue_active: bool = false
 
 # Internal State Tracking
 var _locomotion_state: LocomotionState = LocomotionState.IDLE
@@ -149,6 +150,8 @@ func _ready() -> void:
 	if Engine.has_singleton("EventBus") or get_node_or_null("/root/EventBus"):
 		EventBus.player_health_changed.emit(current_health, max_health)
 		EventBus.player_stamina_changed.emit(current_stamina, max_stamina)
+		EventBus.mission_dialogue_opened.connect(func(): _is_dialogue_active = true)
+		EventBus.mission_dialogue_closed.connect(func(): _is_dialogue_active = false)
 	
 	if not InputMap.has_action("move_left"):
 		_register_input_actions()
@@ -163,6 +166,14 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	_update_ground_elevation()
 	_update_timers(delta)
+	
+	if _is_dialogue_active:
+		_apply_horizontal_movement(0.0, delta)
+		_handle_vertical_physics(delta)
+		_update_animation_state(false)
+		move_and_slide()
+		return
+	
 	_handle_weapon_swapping()
 	_handle_crouch_input()
 	
