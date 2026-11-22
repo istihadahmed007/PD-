@@ -10,6 +10,7 @@ extends Node3D
 @onready var tong_shop: Node3D = %BismillahTeaStall if has_node("%BismillahTeaStall") else null
 
 var mission_system: MissionSystem = null
+var world_system: WorldSystem = null
 
 
 func _ready() -> void:
@@ -29,6 +30,13 @@ func _ready() -> void:
 	mission_system = MissionSystem.new()
 	mission_system.name = "MissionSystem"
 	add_child(mission_system)
+	
+	# Initialize Master Open-World System (streams 7 interconnected regions around Old Dhaka)
+	if not has_node("WorldSystem"):
+		world_system = WorldSystem.new()
+		world_system.name = "WorldSystem"
+		world_system.is_master_district_present = true
+		add_child(world_system)
 	
 	# Spawn World Story Quest Triggers
 	_spawn_story_mission_triggers()
@@ -98,11 +106,14 @@ func _spawn_story_mission_triggers() -> void:
 
 
 func _spawn_economy_infrastructure() -> void:
-	var ui_scene = load("res://ui/economy/economy_ui_controller.tscn")
 	var economy_ui: EconomyUIController = null
-	if ui_scene:
-		economy_ui = ui_scene.instantiate() as EconomyUIController
-		add_child(economy_ui)
+	if has_node("UI/EconomyUIController"):
+		economy_ui = $UI/EconomyUIController as EconomyUIController
+	else:
+		var ui_scene = load("res://ui/economy/economy_ui_controller.tscn")
+		if ui_scene:
+			economy_ui = ui_scene.instantiate() as EconomyUIController
+			add_child(economy_ui)
 		
 	var station_scene = load("res://scripts/economy/shop_station.tscn")
 	var atm_scene = load("res://scripts/economy/atm_terminal.tscn")

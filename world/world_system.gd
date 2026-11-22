@@ -9,6 +9,7 @@ extends Node3D
 
 @export var cell_size_meters: float = 512.0
 @export var stream_radius_cells: int = 1
+@export var is_master_district_present: bool = true
 
 var streamer: ChunkStreamer = null
 var biome_manager: RegionalBiomeManager = null
@@ -49,8 +50,9 @@ func _process(_delta: float) -> void:
 
 func _register_all_world_chunks() -> void:
 	# Continuous geographical grid across Bangladesh
-	# 1. Dhaka Region (Cell 0, 0)
-	streamer.register_chunk(Vector2i(0, 0), "res://world/regions/region_01_dhaka.tscn")
+	# 1. Dhaka Region (Cell 0, 0) - only register if standalone/not in Master District 01
+	if not is_master_district_present:
+		streamer.register_chunk(Vector2i(0, 0), "res://world/regions/region_01_dhaka.tscn")
 	# 2. Rajshahi & Padma Region (Cell -2, 0)
 	streamer.register_chunk(Vector2i(-2, 0), "res://world/regions/region_02_rajshahi_padma.tscn")
 	# 3. Sylhet Tea Gardens & Wetlands (Cell 1, 1)

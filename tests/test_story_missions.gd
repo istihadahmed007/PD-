@@ -89,6 +89,8 @@ func _process(_delta: float) -> void:
 	info += "  [1] Start Mission 01: Shadows & Spark Plugs (ছায়া ও চালক)\n"
 	info += "  [2] Start Mission 02: Eyes of the Buriganga (বুড়িগঙ্গার চোখ)\n"
 	info += "  [3] Start Mission 03: Smoke Over Padma (পদ্মার ধোঁয়া)\n"
+	info += "  [4] Start Mission 04: Hostile Repossession (দখলদার উচ্ছেদ)\n"
+	info += "  [5] Start Mission 05: The Thana Lockdown (থানা লকডাউন)\n"
 	info += "  [N] Advance / Skip Current Objective Step\n"
 	info += "  [R] Retry Mission from Last Checkpoint\n"
 	info += "  [F] Trigger Mission Failure (Test somber audio & retry)\n"
@@ -114,6 +116,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		KEY_3:
 			if mission_system:
 				mission_system.start_mission(StoryMissions.get_mission_3())
+		KEY_4:
+			if mission_system:
+				mission_system.start_mission(StoryMissions.get_mission_4())
+		KEY_5:
+			if mission_system:
+				mission_system.start_mission(StoryMissions.get_mission_5())
 		KEY_N:
 			if mission_system and mission_system.active_mission:
 				mission_system.advance_objective()

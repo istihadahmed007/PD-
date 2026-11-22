@@ -46,6 +46,14 @@ var is_shifting: bool = false
 var shift_timer: float = 0.0
 var headlights_active: bool = false
 
+# Multiplayer & Remote Driver Input State
+var _has_remote_inputs: bool = false
+var _remote_throttle: float = 0.0
+var _remote_brake: float = 0.0
+var _remote_steer: float = 0.0
+var _remote_handbrake: bool = false
+var _network_sync_timer: float = 0.0
+
 # Wheels Cache
 var front_wheels: Array[VehicleWheel3D] = []
 var rear_wheels: Array[VehicleWheel3D] = []
@@ -125,14 +133,33 @@ func _physics_process(delta: float) -> void:
 	else:
 		_process_idle(delta)
 	
+	# In multiplayer, server broadcasts vehicle transform to all clients
+	if multiplayer and multiplayer.has_multiplayer_peer() and multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED:
+		if multiplayer.is_server() and is_driven:
+			_network_sync_timer += delta
+			if _network_sync_timer >= 0.05:
+				_network_sync_timer = 0.0
+				s2c_sync_vehicle_transform.rpc(global_position, rotation, linear_velocity)
+	
 	_update_audio(speed_kmh)
 
 
 func _process_driver_input(delta: float, speed_kmh: float, speed_ms: float) -> void:
-	var throttle_in := Input.get_action_strength("move_up")
-	var brake_in := Input.get_action_strength("move_down")
-	var steer_in := Input.get_axis("move_right", "move_left") # positive = turn left
-	var handbrake_in := Input.is_action_pressed("jump")
+	var throttle_in: float
+	var brake_in: float
+	var steer_in: float
+	var handbrake_in: bool
+	
+	if _has_remote_inputs:
+		throttle_in = _remote_throttle
+		brake_in = _remote_brake
+		steer_in = _remote_steer
+		handbrake_in = _remote_handbrake
+	else:
+		throttle_in = Input.get_action_strength("move_up")
+		brake_in = Input.get_action_strength("move_down")
+		steer_in = Input.get_axis("move_right", "move_left") # positive = turn left
+		handbrake_in = Input.is_action_pressed("jump")
 	
 	# Exit Vehicle
 	if Input.is_action_just_pressed("interact"):
@@ -366,6 +393,11 @@ func mount_driver(driver: Node) -> void:
 func dismount_driver() -> void:
 	is_driven = false
 	driver_ref = null
+	_has_remote_inputs = false
+	_remote_throttle = 0.0
+	_remote_brake = 0.0
+	_remote_steer = 0.0
+	_remote_handbrake = false
 	
 	if interactable_area:
 		interactable_area.is_active = true
@@ -377,6 +409,22 @@ func dismount_driver() -> void:
 	_play_door_animation()
 	
 	driver_dismounted.emit()
+
+
+func apply_driver_inputs(throttle: float, brake: float, steer: float, handbrake: bool) -> void:
+	_remote_throttle = clampf(throttle, 0.0, 1.0)
+	_remote_brake = clampf(brake, 0.0, 1.0)
+	_remote_steer = clampf(steer, -1.0, 1.0)
+	_remote_handbrake = handbrake
+	_has_remote_inputs = true
+
+
+@rpc("authority", "call_remote", "unreliable")
+func s2c_sync_vehicle_transform(pos: Vector3, rot: Vector3, lin_vel: Vector3) -> void:
+	if not multiplayer.is_server():
+		global_position = global_position.lerp(pos, 0.45)
+		rotation.y = lerp_angle(rotation.y, rot.y, 0.45)
+		linear_velocity = lin_vel
 
 
 func _play_door_animation() -> void:

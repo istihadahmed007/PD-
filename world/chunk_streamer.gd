@@ -101,5 +101,23 @@ func _unload_tile(cell: Vector2i) -> void:
 		var tile = active_tiles[cell]
 		active_tiles.erase(cell)
 		if is_instance_valid(tile):
+			_protect_dynamic_actors(tile)
 			tile.queue_free()
 		chunk_unloaded.emit(cell)
+
+
+func _protect_dynamic_actors(node: Node) -> void:
+	var to_reparent: Array[Node] = []
+	for child in node.get_children():
+		if child.is_in_group("players") or child.is_in_group("network_players") or child.is_in_group("vehicles") or child.is_in_group("persistent_objects") or child is Player or child is NetworkPlayer or child is BaseVehicle3D:
+			to_reparent.append(child)
+		else:
+			_protect_dynamic_actors(child)
+	
+	for actor in to_reparent:
+		var prev_global_trans: Transform3D = actor.global_transform
+		if actor.get_parent():
+			actor.get_parent().remove_child(actor)
+		if get_tree().current_scene:
+			get_tree().current_scene.add_child(actor)
+			actor.global_transform = prev_global_trans

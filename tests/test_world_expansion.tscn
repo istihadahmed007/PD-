@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" path="res://vehicles/sedan/sedan.tscn" id="3_sedan"]
 [ext_resource type="Script" path="res://world/world_system.gd" id="4_world"]
 [ext_resource type="PackedScene" uid="uid://worldmapui001" path="res://ui/world_map/world_map_ui.tscn" id="5_map"]
-[ext_resource type="PackedScene" uid="uid://b5hud001" path="res://ui/hud/hud.tscn" id="6_hud"]
+[ext_resource type="PackedScene" uid="uid://bdahud001scene" path="res://ui/hud/hud.tscn" id="6_hud"]
 
 [sub_resource type="Environment" id="Environment_world"]
 background_mode = 1

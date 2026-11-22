@@ -96,10 +96,13 @@ var _input_cam_yaw: float = 0.0
 var _step_timer: float = 0.0
 
 
-func _ready() -> void:
-	# Configure SceneReplicationConfig programmatically for absolute stability
+func _enter_tree() -> void:
 	_setup_synchronizer_config()
-	
+	_update_ownership()
+
+
+func _ready() -> void:
+	_setup_synchronizer_config()
 	_update_ownership()
 	_update_nickname_display()
 	
@@ -113,6 +116,11 @@ func _ready() -> void:
 
 func _setup_synchronizer_config() -> void:
 	if not synchronizer:
+		return
+	
+	# If already configured from .tscn resource, maintain authority and return
+	if synchronizer.replication_config != null:
+		synchronizer.set_multiplayer_authority(1)
 		return
 	
 	var config := SceneReplicationConfig.new()
@@ -171,7 +179,7 @@ func _update_ownership() -> void:
 		return
 	
 	var unique_id := 0
-	if multiplayer and multiplayer.has_multiplayer_peer():
+	if multiplayer and multiplayer.has_multiplayer_peer() and multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED:
 		unique_id = multiplayer.get_unique_id()
 	is_local_player = (player_peer_id == unique_id)
 	
@@ -242,6 +250,17 @@ func _physics_process(delta: float) -> void:
 	# A) LOCAL CLIENT: Sample input and transmit to Server via Unreliable Ordered RPC
 	# --------------------------------------------------------------------------
 	if is_local_player:
+		if is_in_vehicle:
+			var v_throttle := Input.get_action_strength("move_up")
+			var v_brake := Input.get_action_strength("move_down")
+			var v_steer := Input.get_axis("move_right", "move_left")
+			var v_handbrake := Input.is_action_pressed("jump")
+			if not multiplayer.is_server():
+				c2s_send_vehicle_input.rpc_id(1, v_throttle, v_brake, v_steer, v_handbrake)
+			else:
+				_receive_vehicle_input_internal(v_throttle, v_brake, v_steer, v_handbrake)
+			return
+
 		var raw_input := Vector2.ZERO
 		# Read WASD or mapped input actions
 		if InputMap.has_action("move_left"):
@@ -274,7 +293,7 @@ func _physics_process(delta: float) -> void:
 	# --------------------------------------------------------------------------
 	# B) SERVER: Run authoritative movement physics with move_and_slide()
 	# --------------------------------------------------------------------------
-	if multiplayer.is_server():
+	if multiplayer and multiplayer.has_multiplayer_peer() and multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED and multiplayer.is_server():
 		if is_in_vehicle and current_vehicle_node and is_instance_valid(current_vehicle_node):
 			global_position = current_vehicle_node.global_position
 			velocity = Vector3.ZERO
@@ -455,6 +474,22 @@ func _receive_input_internal(input_vec: Vector2, sprint: bool, jump: bool, cam_y
 	_input_cam_yaw = cam_yaw
 
 
+@rpc("any_peer", "call_remote", "unreliable_ordered")
+func c2s_send_vehicle_input(throttle: float, brake: float, steer: float, handbrake: bool) -> void:
+	if not multiplayer.is_server():
+		return
+	var sender_id := multiplayer.get_remote_sender_id()
+	if sender_id != player_peer_id:
+		return
+	_receive_vehicle_input_internal(throttle, brake, steer, handbrake)
+
+
+func _receive_vehicle_input_internal(throttle: float, brake: float, steer: float, handbrake: bool) -> void:
+	if is_in_vehicle and current_vehicle_node and is_instance_valid(current_vehicle_node):
+		if current_vehicle_node.has_method("apply_driver_inputs"):
+			current_vehicle_node.apply_driver_inputs(throttle, brake, steer, handbrake)
+
+
 # ==============================================================================
 # MULTIPLAYER VEHICLE MOUNTING & SYNCHRONIZATION
 # ==============================================================================
@@ -552,6 +587,20 @@ func take_damage(amount: float) -> void:
 	current_health = maxf(0.0, current_health - amount)
 	sync_health = current_health
 	s2c_notify_damage.rpc(current_health, max_health)
+
+
+func heal(amount: float) -> void:
+	if not multiplayer.is_server():
+		return
+	current_health = minf(max_health, current_health + amount)
+	sync_health = current_health
+	s2c_notify_damage.rpc(current_health, max_health)
+
+
+func restore_stamina(amount: float) -> void:
+	current_stamina = minf(max_stamina, current_stamina + amount)
+	if is_local_player:
+		EventBus.player_stamina_changed.emit(current_stamina, max_stamina)
 
 
 @rpc("authority", "call_local", "reliable")

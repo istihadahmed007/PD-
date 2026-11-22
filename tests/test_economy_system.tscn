@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://ciqrpd5675boy" path="res://player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://vehicles/sedan/sedan.tscn" id="3_sedan"]
 [ext_resource type="PackedScene" uid="uid://economyui001" path="res://ui/economy/economy_ui_controller.tscn" id="4_ui"]
-[ext_resource type="PackedScene" uid="uid://b5hud001" path="res://ui/hud/hud.tscn" id="5_hud"]
+[ext_resource type="PackedScene" uid="uid://bdahud001scene" path="res://ui/hud/hud.tscn" id="5_hud"]
 [ext_resource type="PackedScene" uid="uid://shopstation001" path="res://scripts/economy/shop_station.tscn" id="6_station"]
 [ext_resource type="PackedScene" uid="uid://atmterminal001" path="res://scripts/economy/atm_terminal.tscn" id="7_atm"]
 [ext_resource type="PackedScene" uid="uid://safehouseprop001" path="res://scripts/economy/safehouse_property.tscn" id="8_safehouse"]

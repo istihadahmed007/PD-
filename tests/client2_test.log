@@ -1,5 +1,13 @@
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 
-[16:57:52] [NET-INFO] Command-line trigger: Connecting Client to 127.0.0.1:7788 as 'Kabir_Client'...
-[16:57:52] [NET-INFO] Multiplayer peer disconnected and cleaned up.
-[16:57:52] [NET-INFO] Connecting to server at 127.0.0.1:7788 as 'Kabir_Client'...
+[21:28:44] [NET-INFO] Command-line trigger: Connecting Client to 127.0.0.1:7788 as 'Kabir_Client'...
+[21:28:44] [NET-INFO] Multiplayer peer disconnected and cleaned up.
+[21:28:44] [NET-INFO] Connecting to server at 127.0.0.1:7788 as 'Kabir_Client'...
+[21:28:49] [NET-INFO] [CLIENT] Successfully connected to server! Assigned Peer ID: 851102469
+[21:28:49] [NET-INFO] Remote peer connected: ID 1
+[21:28:49] [NET-INFO] Remote peer connected: ID 212483901
+[21:28:49] [NET-INFO] [CLIENT] Synchronized player list. Count: 2
+[21:28:58] [NET-INFO] Peer disconnected: ID 212483901
+[21:28:58] [NET-INFO] [CLIENT] Synchronized player list. Count: 1
+[21:29:03] [NET-INFO] Remote peer connected: ID 375849431
+[21:29:03] [NET-INFO] [CLIENT] Synchronized player list. Count: 2

@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bdahud001scene" path="res://ui/hud/hud.tscn" id="5_hud"]
 [ext_resource type="PackedScene" uid="uid://d3missiontrigger001" path="res://missions/mission_trigger.tscn" id="6_trigger"]
 [ext_resource type="PackedScene" uid="uid://d3autoworkshop001" path="res://environment/architecture/auto_workshop.tscn" id="7_workshop"]
-[ext_resource type="PackedScene" uid="uid://d3commercialmarket001" path="res://environment/architecture/commercial_market.tscn" id="8_market"]
+[ext_resource type="PackedScene" uid="uid://d3marketrow001" path="res://environment/architecture/commercial_market.tscn" id="8_market"]
 [ext_resource type="PackedScene" uid="uid://d3policestation001" path="res://environment/architecture/police_station.tscn" id="9_policestation"]
 [ext_resource type="PackedScene" uid="uid://d3canalbridge001" path="res://environment/infrastructure/canal_bridge.tscn" id="10_bridge"]
 [ext_resource type="PackedScene" uid="uid://d3cng001" path="res://vehicles/cng/cng_autorickshaw.tscn" id="11_cng"]

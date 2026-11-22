@@ -104,9 +104,13 @@ func _spawn_network_player(peer_id: int, nickname: String) -> void:
 	# Check if player node already exists
 	if players_container.has_node(node_name):
 		var existing: Node = players_container.get_node(node_name)
-		if existing and "player_nickname" in existing:
-			existing.player_nickname = nickname
-		return
+		if existing and existing.is_queued_for_deletion():
+			players_container.remove_child(existing)
+			existing.free()
+		elif existing:
+			if "player_nickname" in existing:
+				existing.player_nickname = nickname
+			return
 	
 	var spawn_pos := _get_next_spawn_position()
 	

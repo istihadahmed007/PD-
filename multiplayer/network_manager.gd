@@ -424,10 +424,12 @@ func _parse_cmdline_arguments() -> void:
 		_log_info("Command-line trigger: Starting Headless Dedicated Server on %s port %d..." % [proto_str, parsed_port])
 		var err := start_server(parsed_port, parsed_max, true, "DedicatedServer", use_websocket)
 		if err == OK:
-			get_tree().change_scene_to_file(WORLD_SCENE_PATH)
+			if get_tree().current_scene == null or get_tree().current_scene.scene_file_path != WORLD_SCENE_PATH:
+				get_tree().change_scene_to_file(WORLD_SCENE_PATH)
 	elif is_client_requested:
 		if parsed_nick.is_empty():
 			parsed_nick = "Player_%d" % (randi() % 900 + 100)
 		_log_info("Command-line trigger: Connecting Client to %s:%d as '%s'..." % [parsed_ip, parsed_port, parsed_nick])
 		start_client(parsed_ip, parsed_port, parsed_nick)
-		get_tree().change_scene_to_file(WORLD_SCENE_PATH)
+		if get_tree().current_scene == null or get_tree().current_scene.scene_file_path != WORLD_SCENE_PATH:
+			get_tree().change_scene_to_file(WORLD_SCENE_PATH)
