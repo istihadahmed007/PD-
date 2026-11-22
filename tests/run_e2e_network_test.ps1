@@ -11,7 +11,7 @@
 # ==============================================================================
 
 $GodotExe = "C:\Users\Tonmoy\AppData\Local\Microsoft\WinGet\Packages\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\Godot_v4.7.2-stable_win64_console.exe"
-$ProjectPath = "c:\Users\Tonmoy\Documents\DTA 0"
+$ProjectPath = (Resolve-Path "$PSScriptRoot\..").Path
 $Port = 7788
 
 Write-Host "====================================================================="

@@ -1,16 +1,16 @@
 Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 
-[00:17:00] [NET-INFO] Command-line trigger: Starting Headless Dedicated Server on UDP port 7788...
-[00:17:00] [NET-INFO] Multiplayer peer disconnected and cleaned up.
-[00:17:00] [NET-INFO] DEDICATED SERVER started successfully on UDP port 7788 (Max peers: 8)
-[00:17:04] [NET-INFO] Remote peer connected: ID 1234850900
-[00:17:04] [NET-INFO] [SERVER] Awaiting registration handshake from peer 1234850900...
-[00:17:04] [NET-INFO] [SERVER] Registered peer 1234850900 as 'Joy_Client'. Total players: 1
-[SERVER] Spawned player character for peer 1234850900 ('Joy_Client') at (-0.372064, 0.2, -0.336441)
-[00:17:07] [NET-INFO] Remote peer connected: ID 1679603589
-[00:17:07] [NET-INFO] [SERVER] Awaiting registration handshake from peer 1679603589...
-[00:17:07] [NET-INFO] [SERVER] Registered peer 1679603589 as 'Kabir_Client'. Total players: 2
-[SERVER] Spawned player character for peer 1679603589 ('Kabir_Client') at (5.062536, 0.2, 1.854983)
-[00:17:08] [NET-INFO] Peer disconnected: ID 1234850900
-[00:17:08] [NET-INFO] [SERVER] Player 'Joy_Client' (ID 1234850900) left the session.
-[SERVER] Despawning player character for disconnected peer 1234850900...
+[11:45:12] [NET-INFO] Command-line trigger: Starting Headless Dedicated Server on UDP/ENet port 7788...
+[11:45:12] [NET-INFO] Multiplayer peer disconnected and cleaned up.
+[11:45:12] [NET-INFO] DEDICATED SERVER started successfully on UDP/ENet port 7788 (Max peers: 8)
+[11:45:16] [NET-INFO] Remote peer connected: ID 641952449
+[11:45:16] [NET-INFO] [SERVER] Awaiting registration handshake from peer 641952449...
+[11:45:16] [NET-INFO] [SERVER] Registered peer 641952449 as 'Joy_Client'. Total players: 1
+[SERVER] Spawned player character for peer 641952449 ('Joy_Client') at (0.372395, 0.2, 0.461336)
+[11:45:19] [NET-INFO] Remote peer connected: ID 1104017455
+[11:45:19] [NET-INFO] [SERVER] Awaiting registration handshake from peer 1104017455...
+[11:45:19] [NET-INFO] [SERVER] Registered peer 1104017455 as 'Kabir_Client'. Total players: 2
+[SERVER] Spawned player character for peer 1104017455 ('Kabir_Client') at (5.489407, 0.2, 1.065094)
+[11:45:20] [NET-INFO] Peer disconnected: ID 641952449
+[11:45:20] [NET-INFO] [SERVER] Player 'Joy_Client' (ID 641952449) left the session.
+[SERVER] Despawning player character for disconnected peer 641952449...
