@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #0b0f19;
+  font-family: 'Chakra Petch', 'Noto Sans Bengali', sans-serif;
+}
+
+canvas {
+  outline: none;
+  touch-action: none;
+}
+
+/* Custom scrollbar and aesthetic glows */
+.text-stroke-sm {
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.8);
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.7);
+}
+
+.hud-panel {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(2, 6, 23, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  backdrop-filter: blur(8px);
+}
