@@ -1,9 +1,0 @@
-{
-  "name": "gta-bangladesh-web",
-  "version": "1.1.0",
-  "private": true,
-  "description": "GTA Bangladesh (Dhaka Theft Auto) Web Platform",
-  "scripts": {
-    "build": "node scripts/build_vercel.js"
-  }
-}
